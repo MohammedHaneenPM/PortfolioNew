@@ -71,14 +71,19 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
       const startX = timelineRef.current.offsetWidth / 2;
       const startY = 0;
+      const endY = timelineRef.current.offsetHeight;
 
-      // 1. Generate the zig-zag SVG path connecting the nodes
-      // To match the reference, we use a solid line that connects the nodes.
-      let d = `M ${startX} ${startY}`;
-      nodeCoords.forEach((coord) => {
-        d += ` L ${coord.x} ${coord.y}`;
-      });
-      d += ` L ${startX} ${timelineRef.current.offsetHeight}`;
+      // 1. Generate smooth curved (bezier) pathway connecting the nodes
+      const allPoints = [{ x: startX, y: startY }, ...nodeCoords, { x: startX, y: endY }];
+
+      let d = `M ${allPoints[0].x} ${allPoints[0].y}`;
+      for (let i = 0; i < allPoints.length - 1; i++) {
+        const p0 = allPoints[i];
+        const p1 = allPoints[i + 1];
+        const midY = (p0.y + p1.y) / 2;
+        // Cubic bezier using S-curve smoothing between timeline nodes
+        d += ` C ${p0.x} ${midY}, ${p1.x} ${midY}, ${p1.x} ${p1.y}`;
+      }
       setPathData(d);
 
       // 2. Kill old scroll triggers before recreating
@@ -175,13 +180,25 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
         {/* Timeline Container */}
         <div className="relative max-w-5xl mx-auto" ref={timelineRef}>
           
-          {/* Dynamic SVG Path Background */}
+          {/* Dynamic SVG Path Background: Curved & Striped / Dashed */}
           <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+            {/* Soft background shadow glow for contrast */}
+            <path
+              d={pathData}
+              fill="none"
+              stroke="#ec4899"
+              strokeWidth="8"
+              strokeOpacity="0.25"
+              strokeLinecap="round"
+            />
+            {/* Main striped / dashed curved path */}
             <path 
               d={pathData} 
               fill="none" 
               stroke="#0f172a" 
-              strokeWidth="4" 
+              strokeWidth="5" 
+              strokeDasharray="14 10"
+              strokeLinecap="round"
               className="transition-all duration-300"
             />
           </svg>
