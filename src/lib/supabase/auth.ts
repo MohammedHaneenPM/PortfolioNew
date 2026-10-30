@@ -10,15 +10,7 @@ import { createClient } from './server';
  * Returns: { isAdmin: boolean, user: User | null, error?: string }
  */
 export async function verifyAdminSession() {
-  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-
-  if (!adminEmail) {
-    return {
-      isAdmin: false,
-      user: null,
-      error: 'ADMIN_EMAIL is not configured on the server.',
-    };
-  }
+  const adminEmail = (process.env.ADMIN_EMAIL || 'connect.haneen@gmail.com').trim().toLowerCase();
 
   try {
     const supabase = await createClient();
