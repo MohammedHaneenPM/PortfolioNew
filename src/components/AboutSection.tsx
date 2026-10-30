@@ -48,6 +48,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
   const markerRef = useRef<HTMLDivElement>(null);
   const [pathData, setPathData] = useState('');
 
+  const svgPathRef = useRef<SVGPathElement>(null);
+
   // We use useGSAP to handle the animations and path generation
   useGSAP(() => {
     if (!timelineRef.current || !markerRef.current) return;
@@ -91,34 +93,36 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
         if (t.vars.id === 'arrow-scroll') t.kill();
       });
 
-      // Reset marker position
-      gsap.set(markerRef.current, { x: 0, y: 0, left: startX, top: startY });
+      // Position marker along the true SVG curved path using getPointAtLength
+      // Request animation frame to let pathData render to SVG DOM first
+      requestAnimationFrame(() => {
+        const pathElem = svgPathRef.current;
+        if (!pathElem) return;
 
-      // 3. Create the GSAP timeline that moves the arrow along the nodes
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          id: 'arrow-scroll',
-          trigger: timelineRef.current,
-          start: "top 50%",
-          end: "bottom 50%",
-          scrub: 1,
-        }
-      });
+        const pathLength = pathElem.getTotalLength();
+        if (pathLength === 0) return;
 
-      // Move from start to Node 1, Node 2, etc.
-      nodeCoords.forEach((coord) => {
-        tl.to(markerRef.current, {
-          left: coord.x,
-          top: coord.y,
+        const startPt = pathElem.getPointAtLength(0);
+        gsap.set(markerRef.current, { left: startPt.x, top: startPt.y });
+
+        const progressObj = { progress: 0 };
+        gsap.to(progressObj, {
+          progress: 1,
           ease: "none",
+          scrollTrigger: {
+            id: 'arrow-scroll',
+            trigger: timelineRef.current,
+            start: "top 50%",
+            end: "bottom 50%",
+            scrub: true,
+            onUpdate: (self) => {
+              if (!pathElem || !markerRef.current) return;
+              const pt = pathElem.getPointAtLength(self.progress * pathLength);
+              markerRef.current.style.left = `${pt.x}px`;
+              markerRef.current.style.top = `${pt.y}px`;
+            },
+          },
         });
-      });
-
-      // Finally move to the bottom center
-      tl.to(markerRef.current, {
-        left: startX,
-        top: timelineRef.current.offsetHeight,
-        ease: "none",
       });
     };
 
@@ -193,6 +197,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             />
             {/* Main striped / dashed curved path */}
             <path 
+              ref={svgPathRef}
               d={pathData} 
               fill="none" 
               stroke="#0f172a" 
