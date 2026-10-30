@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useEffect } from 'react';
-import { X, Briefcase, CheckCircle2, Truck, Zap, Cake } from 'lucide-react';
+import { X, Briefcase, CheckCircle2, Truck, Zap, Cake, ExternalLink } from 'lucide-react';
 import { FreelanceClient } from '../data/portfolioData';
 
 interface ClientModalProps {
@@ -95,7 +97,19 @@ export const ClientModal: React.FC<ClientModalProps> = ({ client, onClose }) => 
           </ul>
         </div>
 
-        <div className="mt-10 pt-6 border-t-4 border-slate-900 flex justify-end">
+        <div className="mt-10 pt-6 border-t-4 border-slate-900 flex items-center justify-between gap-4">
+          {client.liveUrl ? (
+            <a
+              href={client.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-4 bg-emerald-400 hover:bg-emerald-300 border-4 border-slate-900 text-slate-900 font-black uppercase tracking-widest text-xs transition-all shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:translate-y-1 hover:shadow-none"
+            >
+              <span>Visit Live Website</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          ) : <div />}
+
           <button
             onClick={onClose}
             className="px-6 py-4 bg-purple-400 border-4 border-slate-900 text-slate-900 font-black uppercase tracking-widest text-xs transition-all shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:translate-y-1 hover:shadow-none"

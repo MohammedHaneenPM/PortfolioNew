@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef } from 'react';
 import { ArrowUp, Github, Linkedin, Instagram, Mail, Sparkles } from 'lucide-react';
 import { DEVELOPER_PROFILE } from '../data/portfolioData';

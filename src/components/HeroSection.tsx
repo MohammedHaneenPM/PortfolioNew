@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef } from 'react';
 import {
   MapPin,
@@ -14,6 +16,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { DEVELOPER_PROFILE, TICKER_ITEMS, CODE_SNIPPET } from '../data/portfolioData';
+import profileImg from '../profile.png';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -27,6 +30,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onContactClick,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<'photo' | 'code'>('photo');
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -154,61 +158,109 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* Right Column: Code Terminal / Profile Card */}
+          {/* Right Column: Profile Card with Photo & Interactive Mode Switch */}
           <div ref={cardRef} className="lg:col-span-5 flex flex-col items-center relative z-20">
             {/* Decorative elements behind card */}
             <div className="absolute inset-0 bg-gradient-to-br from-pink-400 to-cyan-400 blur-2xl opacity-30 -z-10 rounded-[2rem]" />
             
-            <div className="w-full max-w-lg bg-white border-4 border-slate-900 shadow-[16px_16px_0px_0px_rgba(236,72,153,1)] overflow-hidden rotate-2 hover:rotate-0 transition-transform duration-500">
-              <div className="flex items-center justify-between px-5 py-4 bg-slate-900 border-b-4 border-slate-900">
+            <div className="w-full max-w-md bg-white border-4 border-slate-900 shadow-[14px_14px_0px_0px_rgba(236,72,153,1)] overflow-hidden rotate-1 hover:rotate-0 transition-transform duration-500">
+              {/* Window Header */}
+              <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b-4 border-slate-900">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-pink-500 border border-slate-900" />
-                  <div className="w-4 h-4 rounded-full bg-yellow-400 border border-slate-900" />
-                  <div className="w-4 h-4 rounded-full bg-cyan-400 border border-slate-900" />
+                  <div className="w-3 h-3 rounded-full bg-pink-500 border border-slate-900" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400 border border-slate-900" />
+                  <div className="w-3 h-3 rounded-full bg-cyan-400 border border-slate-900" />
                 </div>
-                <div className="text-sm font-black tracking-widest uppercase text-white">
-                  developer-profile.ts
-                </div>
-                <div className="flex items-center gap-3">
-                  <button onClick={handleCopyCode} className="text-white hover:text-pink-400 transition-colors">
-                    {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                
+                {/* View Switcher Tabs */}
+                <div className="flex items-center bg-slate-800 p-1 border border-slate-700">
+                  <button
+                    onClick={() => setActiveTab('photo')}
+                    className={`px-3 py-1 text-xs font-black uppercase tracking-wider transition-all ${
+                      activeTab === 'photo'
+                        ? 'bg-pink-500 text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Portrait
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('code')}
+                    className={`px-3 py-1 text-xs font-black uppercase tracking-wider transition-all ${
+                      activeTab === 'code'
+                        ? 'bg-cyan-400 text-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Code
                   </button>
                 </div>
+
+                <div className="flex items-center gap-2">
+                  {activeTab === 'code' && (
+                    <button onClick={handleCopyCode} className="text-white hover:text-pink-400 transition-colors" title="Copy snippet">
+                      {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                    </button>
+                  )}
+                </div>
               </div>
 
-              <div className="p-6 font-mono text-sm sm:text-base leading-loose overflow-x-auto text-slate-800 bg-slate-50 selection:bg-pink-300 selection:text-slate-900">
-                <div>
-                  <span className="text-purple-600 font-bold">const</span>{' '}
-                  <span className="text-blue-600 font-bold">developer</span> = &#123;
+              {/* Photo View */}
+              {activeTab === 'photo' ? (
+                <div className="relative bg-slate-100 flex flex-col items-center">
+                  <div className="w-full relative aspect-[3/4] overflow-hidden group">
+                    <img
+                      src={typeof profileImg === 'string' ? profileImg : profileImg.src}
+                      alt="Mohammed Haneen P M"
+                      className="w-full h-full object-cover object-top filter contrast-[1.02] group-hover:scale-102 transition-transform duration-700"
+                    />
+                    
+                    {/* Badge on Photo */}
+                    <div className="absolute top-3 left-3">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border-2 border-slate-900 text-slate-900 text-[11px] font-black uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(236,72,153,1)]">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                        Open to Work
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="pl-6 border-l-2 border-pink-200 ml-2">
-                  <span className="text-slate-500">name</span>: <span className="text-emerald-600 font-bold">&apos;Mohammed Haneen P M&apos;</span>,
+              ) : (
+                /* Code View */
+                <div className="p-6 font-mono text-sm sm:text-base leading-loose overflow-x-auto text-slate-800 bg-slate-50 selection:bg-pink-300 selection:text-slate-900 min-h-[380px] sm:min-h-[420px]">
+                  <div>
+                    <span className="text-purple-600 font-bold">const</span>{' '}
+                    <span className="text-blue-600 font-bold">developer</span> = &#123;
+                  </div>
+                  <div className="pl-6 border-l-2 border-pink-200 ml-2">
+                    <span className="text-slate-500">name</span>: <span className="text-emerald-600 font-bold">&apos;Mohammed Haneen P M&apos;</span>,
+                  </div>
+                  <div className="pl-6 border-l-2 border-pink-200 ml-2">
+                    <span className="text-slate-500">role</span>: <span className="text-emerald-600 font-bold">&apos;Frontend Developer&apos;</span>,
+                  </div>
+                  <div className="pl-6 border-l-2 border-pink-200 ml-2">
+                    <span className="text-slate-500">location</span>: <span className="text-emerald-600 font-bold">&apos;Manjeri, Kerala, India&apos;</span>,
+                  </div>
+                  <div className="pl-6 border-l-2 border-pink-200 ml-2">
+                    <span className="text-slate-500">degree</span>: <span className="text-emerald-600 font-bold">&apos;B.Tech CSE (2022-2026)&apos;</span>,
+                  </div>
+                  <div className="pl-6 border-l-2 border-pink-200 ml-2">
+                    <span className="text-slate-500">college</span>: <span className="text-emerald-600 font-bold">&apos;MEA Engineering College&apos;</span>,
+                  </div>
+                  <div className="pl-6 border-l-2 border-pink-200 ml-2">
+                    <span className="text-slate-500">focus</span>: [
+                    <span className="text-emerald-600 font-bold">&apos;React&apos;</span>,{' '}
+                    <span className="text-emerald-600 font-bold">&apos;Next.js&apos;</span>,{' '}
+                    <span className="text-emerald-600 font-bold">&apos;TypeScript&apos;</span>,{' '}
+                    <span className="text-emerald-600 font-bold">&apos;UI/UX&apos;</span>],
+                  </div>
+                  <div className="pl-6 border-l-2 border-pink-200 ml-2">
+                    <span className="text-slate-500">availableForHire</span>: <span className="text-pink-600 font-bold">true</span>
+                  </div>
+                  <div>&#125;;</div>
                 </div>
-                <div className="pl-6 border-l-2 border-pink-200 ml-2">
-                  <span className="text-slate-500">role</span>: <span className="text-emerald-600 font-bold">&apos;Frontend Developer&apos;</span>,
-                </div>
-                <div className="pl-6 border-l-2 border-pink-200 ml-2">
-                  <span className="text-slate-500">location</span>: <span className="text-emerald-600 font-bold">&apos;Manjeri, Kerala, India&apos;</span>,
-                </div>
-                <div className="pl-6 border-l-2 border-pink-200 ml-2">
-                  <span className="text-slate-500">degree</span>: <span className="text-emerald-600 font-bold">&apos;B.Tech CSE (2022-2026)&apos;</span>,
-                </div>
-                <div className="pl-6 border-l-2 border-pink-200 ml-2">
-                  <span className="text-slate-500">college</span>: <span className="text-emerald-600 font-bold">&apos;MEA Engineering College&apos;</span>,
-                </div>
-                <div className="pl-6 border-l-2 border-pink-200 ml-2">
-                  <span className="text-slate-500">focus</span>: [
-                  <span className="text-emerald-600 font-bold">&apos;React&apos;</span>,{' '}
-                  <span className="text-emerald-600 font-bold">&apos;Next.js&apos;</span>,{' '}
-                  <span className="text-emerald-600 font-bold">&apos;TypeScript&apos;</span>,{' '}
-                  <span className="text-emerald-600 font-bold">&apos;UI/UX&apos;</span>],
-                </div>
-                <div className="pl-6 border-l-2 border-pink-200 ml-2">
-                  <span className="text-slate-500">availableForHire</span>: <span className="text-pink-600 font-bold">true</span>
-                </div>
-                <div>&#125;;</div>
-              </div>
+              )}
 
+              {/* Social Footer Bar */}
               <div className="px-6 py-4 bg-white border-t-4 border-slate-900 flex items-center justify-center gap-4">
                 <a href={DEVELOPER_PROFILE.social.github} target="_blank" rel="noreferrer" className="w-12 h-12 bg-slate-900 hover:bg-pink-500 text-white flex items-center justify-center rounded-none shadow-[4px_4px_0px_0px_rgba(236,72,153,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">
                   <Github className="w-5 h-5" />

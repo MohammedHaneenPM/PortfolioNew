@@ -7,6 +7,8 @@ export interface ProjectItem {
   category: 'all' | 'frontend' | 'ecommerce' | 'interactive' | 'fullstack';
   accentColor: string;
   iconName: 'sparkles' | 'shopping-cart' | 'activity' | 'glasses' | 'shield' | 'layers';
+  imageUrl?: string;
+  imagePath?: string;
   liveUrl?: string;
   githubUrl?: string;
   metrics?: string;
@@ -26,6 +28,7 @@ export interface FreelanceClient {
   iconColor: string;
   bgColor: string;
   details: string;
+  liveUrl?: string;
 }
 
 export interface SkillGroup {
@@ -128,6 +131,7 @@ export const FREELANCE_CLIENTS: FreelanceClient[] = [
     iconColor: '#f87171',
     bgColor: 'rgba(239, 68, 68, 0.12)',
     details: 'Designed and engineered responsive dispatch dashboards, booking forms, and driver tracking visual interfaces with optimized loading speeds.',
+    liveUrl: 'https://boscotransport.ca',
   },
   {
     id: 'lil-whip',
@@ -138,6 +142,7 @@ export const FREELANCE_CLIENTS: FreelanceClient[] = [
     iconColor: '#a855f7',
     bgColor: 'rgba(168, 85, 247, 0.12)',
     details: 'Created an atmospheric multimedia brand experience with audio player integrations, release schedules, and interactive event promos.',
+    liveUrl: 'https://lil-whip.vercel.app',
   },
   {
     id: 'gul-nis',
@@ -148,51 +153,45 @@ export const FREELANCE_CLIENTS: FreelanceClient[] = [
     iconColor: '#f59e0b',
     bgColor: 'rgba(245, 158, 11, 0.12)',
     details: 'Crafted a bespoke e-commerce presentation for handcrafted pastries featuring custom inquiry pipelines and mobile-friendly product catalog.',
+    liveUrl: 'https://www.gulnis.in',
   },
 ];
 
 export const SKILL_GROUPS: SkillGroup[] = [
   {
     id: 'frontend',
-    title: 'Frontend Frameworks & Core',
-    subtitle: 'Modern reactive web stacks',
+    title: 'Frontend Development',
+    subtitle: 'Modern reactive web stacks & animations',
     icon: 'code',
-    skills: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Responsive UI'],
-  },
-  {
-    id: 'styling',
-    title: 'Styling & Design Systems',
-    subtitle: 'Responsive & aesthetic layouts',
-    icon: 'palette',
-    skills: ['Tailwind CSS', 'Bootstrap', 'UI/UX', 'Figma', 'Adobe XD'],
-  },
-  {
-    id: 'cms',
-    title: 'CMS & E-Commerce',
-    subtitle: 'Custom themes & stores',
-    icon: 'shopping-bag',
-    skills: ['Shopify', 'Liquid', 'WordPress', 'SEO'],
-  },
-  {
-    id: 'animations',
-    title: 'Animations & Dynamics',
-    subtitle: 'Smooth scrolling & effects',
-    icon: 'sparkles',
-    skills: ['GSAP', 'ScrollTrigger', 'Lenis', 'Micro-Interactions'],
+    skills: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'GSAP', 'Responsive UI'],
   },
   {
     id: 'backend',
-    title: 'Backend, APIs & Data',
-    subtitle: 'Data integration & persistence',
-    icon: 'database',
-    skills: ['REST API', 'PostgreSQL', 'MySQL', 'Prisma'],
+    title: 'Backend Development',
+    subtitle: 'APIs, server runtimes & integrations',
+    icon: 'terminal',
+    skills: ['Node.js', 'Next.js Route Handlers', 'REST API', 'Server Actions', 'Microservices'],
   },
   {
-    id: 'tools',
-    title: 'Version Control & Cloud',
-    subtitle: 'Deployment & collaboration',
-    icon: 'terminal',
-    skills: ['Git', 'GitHub', 'Vercel', 'DevTools'],
+    id: 'database',
+    title: 'Database',
+    subtitle: 'Data modeling, persistence & auth',
+    icon: 'database',
+    skills: ['PostgreSQL', 'Supabase', 'MySQL', 'Prisma ORM', 'Row Level Security (RLS)'],
+  },
+  {
+    id: 'uiux',
+    title: 'UI/UX Design',
+    subtitle: 'Visual identity, wireframes & design systems',
+    icon: 'palette',
+    skills: ['Figma', 'UI/UX Systems', 'Neobrutalism', 'Micro-Interactions', 'Prototyping', 'Accessibility (a11y)'],
+  },
+  {
+    id: 'data-analytics',
+    title: 'Data Analytics',
+    subtitle: 'Metrics, visualization & simulations',
+    icon: 'sparkles',
+    skills: ['Data Visualization', 'Deloitte Job Simulation', 'Quantum Analytics', 'Performance Analytics', 'SEO Analysis'],
   },
 ];
 

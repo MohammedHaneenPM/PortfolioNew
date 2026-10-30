@@ -1,17 +1,16 @@
+'use client';
+
 import React, { useState, useRef } from 'react';
 import {
   Mail,
   Phone,
   MapPin,
-  Send,
   Github,
   Linkedin,
   Instagram,
   Copy,
   Check,
-  CheckCircle,
   ExternalLink,
-  MessageSquare,
 } from 'lucide-react';
 import { DEVELOPER_PROFILE } from '../data/portfolioData';
 import gsap from 'gsap';
@@ -22,50 +21,23 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const ContactSection: React.FC = () => {
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: 'Project Inquiry / Job Opportunity',
-    message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const formRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     // Animate contact info cards
     if (infoRef.current) {
       gsap.fromTo(infoRef.current.children, 
-        { x: -50, opacity: 0 },
+        { y: 30, opacity: 0 },
         {
           scrollTrigger: {
             trigger: infoRef.current,
             start: "top 85%",
           },
-          x: 0,
+          y: 0,
           opacity: 1,
           duration: 0.6,
           stagger: 0.1,
-          ease: "back.out(1.2)",
-          clearProps: "all"
-        }
-      );
-    }
-
-    // Animate form
-    if (formRef.current) {
-      gsap.fromTo(formRef.current,
-        { x: 50, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: formRef.current,
-            start: "top 85%",
-          },
-          x: 0,
-          opacity: 1,
-          duration: 0.6,
           ease: "back.out(1.2)",
           clearProps: "all"
         }
@@ -123,9 +95,10 @@ export const ContactSection: React.FC = () => {
         </div>
 
         {/* Contact Grid: Left details & social, Right form */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          {/* Left Column: Contact Cards & Socials */}
-          <div ref={infoRef} className="lg:col-span-5 space-y-6">
+        {/* Contact Grid: Direct Communication Channels & Meeting Invitation */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch" ref={infoRef}>
+          {/* Left Column: Direct Communication Cards */}
+          <div className="lg:col-span-7 space-y-6">
             {/* Email Card */}
             <div className="p-6 rounded-none bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(236,72,153,1)] hover:translate-x-1 hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(236,72,153,1)] transition-all group flex items-start justify-between">
               <div className="flex items-start gap-4">
@@ -138,12 +111,12 @@ export const ContactSection: React.FC = () => {
                   </div>
                   <a
                     href={`mailto:${DEVELOPER_PROFILE.email}`}
-                    className="text-sm sm:text-lg font-black text-slate-900 hover:text-pink-600 transition-colors block mt-1 break-all"
+                    className="text-base sm:text-xl font-black text-slate-900 hover:text-pink-600 transition-colors block mt-1 break-all"
                   >
                     {DEVELOPER_PROFILE.email}
                   </a>
-                  <div className="text-sm font-bold text-pink-500 mt-1 uppercase tracking-widest">
-                    Click to send email
+                  <div className="text-xs font-bold text-pink-500 mt-1 uppercase tracking-widest">
+                    Direct Email • Typically replies within 24 hours
                   </div>
                 </div>
               </div>
@@ -161,7 +134,7 @@ export const ContactSection: React.FC = () => {
               </button>
             </div>
 
-            {/* Phone Card */}
+            {/* Phone & WhatsApp Card */}
             <div className="p-6 rounded-none bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(16,185,129,1)] hover:translate-x-1 hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(16,185,129,1)] transition-all group flex items-start justify-between">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-emerald-100 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex items-center justify-center text-emerald-600 shrink-0 mt-0.5">
@@ -169,18 +142,18 @@ export const ContactSection: React.FC = () => {
                 </div>
                 <div>
                   <div className="text-xs font-black uppercase tracking-widest text-slate-500">
-                    Phone Number
+                    Phone & WhatsApp
                   </div>
                   <a
                     href="https://wa.me/918547896740"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-base sm:text-lg font-black text-slate-900 hover:text-emerald-600 transition-colors block mt-1"
+                    className="text-base sm:text-xl font-black text-slate-900 hover:text-emerald-600 transition-colors block mt-1"
                   >
                     {DEVELOPER_PROFILE.phone}
                   </a>
-                  <div className="text-sm font-bold text-emerald-500 mt-1 uppercase tracking-widest">
-                    Direct line & WhatsApp
+                  <div className="text-xs font-bold text-emerald-500 mt-1 uppercase tracking-widest">
+                    Direct Line & WhatsApp Available
                   </div>
                 </div>
               </div>
@@ -198,20 +171,20 @@ export const ContactSection: React.FC = () => {
               </button>
             </div>
 
-            {/* Location Card */}
+            {/* Location & Remote Availability Card */}
             <div className="p-6 rounded-none bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(168,85,247,1)] hover:translate-x-1 hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(168,85,247,1)] transition-all flex items-start gap-4">
               <div className="w-12 h-12 bg-purple-100 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex items-center justify-center text-purple-600 shrink-0 mt-0.5">
                 <MapPin className="w-6 h-6" />
               </div>
               <div>
                 <div className="text-xs font-black uppercase tracking-widest text-slate-500">
-                  Location
+                  Location & Availability
                 </div>
                 <div className="text-base sm:text-lg font-black text-slate-900 mt-1">
                   {DEVELOPER_PROFILE.location}
                 </div>
-                <div className="text-sm font-bold text-purple-500 mt-1 uppercase tracking-widest">
-                  Open to remote worldwide
+                <div className="text-xs font-bold text-purple-500 mt-1 uppercase tracking-widest">
+                  Open to Remote Worldwide & Freelance Contracts
                 </div>
               </div>
             </div>
@@ -220,10 +193,10 @@ export const ContactSection: React.FC = () => {
             <div className="p-6 rounded-none bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] space-y-4">
               <div>
                 <h4 className="text-lg font-black text-slate-900 uppercase">
-                  Connect On Social Media
+                  Social Profiles & Networks
                 </h4>
-                <p className="text-sm font-bold text-slate-600 mt-1">
-                  Follow my coding journeys, designs, and GitHub repositories.
+                <p className="text-xs font-bold text-slate-600 mt-1">
+                  Check out repositories, connect professionally, or view creative experiments.
                 </p>
               </div>
 
@@ -259,138 +232,50 @@ export const ContactSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Direct Message Form */}
-          <div className="lg:col-span-7">
-            <div ref={formRef} className="p-8 sm:p-10 bg-slate-900 border-4 border-slate-900 shadow-[16px_16px_0px_0px_rgba(245,158,11,1)] relative rounded-none">
-              <div className="flex items-center justify-between pb-6 mb-6 border-b-4 border-slate-800">
-                <div>
-                  <h3 className="text-2xl sm:text-4xl font-black text-white uppercase tracking-tighter">
-                    Send a Direct Message
-                  </h3>
-                  <p className="text-sm font-bold text-slate-400 mt-2 uppercase tracking-widest">
-                    Connect directly with Mohammed Haneen P M.
-                  </p>
+          {/* Right Column: Book Meeting Fast-Track Hero Card */}
+          <div className="lg:col-span-5 flex flex-col">
+            <div className="p-8 sm:p-10 bg-slate-900 border-4 border-slate-900 shadow-[16px_16px_0px_0px_rgba(245,158,11,1)] relative rounded-none text-white h-full flex flex-col justify-between">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-400 text-slate-900 text-xs font-black uppercase tracking-widest mb-6 shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] -rotate-2">
+                  <span>Fast Response</span>
                 </div>
-                <div className="w-12 h-12 bg-amber-400 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center text-slate-900 rotate-6">
-                  <Send className="w-6 h-6" />
+
+                <h3 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tighter leading-tight">
+                  Prefer a Face-to-Face <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-pink-500">
+                    Discussion?
+                  </span>
+                </h3>
+
+                <p className="text-slate-300 font-semibold text-sm sm:text-base leading-relaxed mt-4">
+                  Skip the back-and-forth emails. Pick a specific date and time on my calendar right below. Meeting requests are verified and confirmed automatically.
+                </p>
+
+                <div className="mt-8 space-y-4 border-t-2 border-slate-800 pt-6">
+                  <div className="flex items-center gap-3 text-sm font-bold text-slate-200">
+                    <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full" />
+                    <span>Real-time availability slot selection</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm font-bold text-slate-200">
+                    <div className="w-2.5 h-2.5 bg-pink-400 rounded-full" />
+                    <span>Automated email confirmation sent to both of us</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm font-bold text-slate-200">
+                    <div className="w-2.5 h-2.5 bg-amber-400 rounded-full" />
+                    <span>Direct Google Meet / Zoom link setup</span>
+                  </div>
                 </div>
               </div>
 
-              {isSubmitted ? (
-                <div className="py-16 text-center space-y-6">
-                  <div className="w-24 h-24 bg-emerald-400 border-4 border-slate-900 text-slate-900 mx-auto flex items-center justify-center shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] -rotate-3">
-                    <CheckCircle className="w-12 h-12" />
-                  </div>
-                  <h4 className="text-3xl font-black text-white uppercase">Message Transmitted!</h4>
-                  <p className="text-lg font-bold text-slate-300 max-w-md mx-auto">
-                    Thank you for reaching out, {formData.name}. Your message is on its way. You can also connect via WhatsApp or direct email.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setIsSubmitted(false);
-                      setFormData({
-                        name: '',
-                        email: '',
-                        subject: 'Project Inquiry / Job Opportunity',
-                        message: '',
-                      });
-                    }}
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-white text-slate-900 text-sm font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(16,185,129,1)] hover:translate-y-1 hover:shadow-none transition-all mt-4 border-2 border-slate-900"
-                  >
-                    <span>Send Another Message</span>
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {/* Your Name */}
-                    <div>
-                      <label className="block text-xs font-black uppercase tracking-widest text-amber-400 mb-2">
-                        Your Name
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
-                        }
-                        placeholder="e.g. Alex Morgan"
-                        className="w-full px-5 py-4 bg-white border-4 border-slate-900 text-slate-900 placeholder-slate-400 font-bold focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(245,158,11,1)] transition-shadow rounded-none"
-                      />
-                    </div>
-
-                    {/* Your Email */}
-                    <div>
-                      <label className="block text-xs font-black uppercase tracking-widest text-amber-400 mb-2">
-                        Your Email
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
-                        }
-                        placeholder="alex@company.com"
-                        className="w-full px-5 py-4 bg-white border-4 border-slate-900 text-slate-900 placeholder-slate-400 font-bold focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(245,158,11,1)] transition-shadow rounded-none"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Subject */}
-                  <div>
-                    <label className="block text-xs font-black uppercase tracking-widest text-amber-400 mb-2">
-                      Subject
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.subject}
-                      onChange={(e) =>
-                        setFormData({ ...formData, subject: e.target.value })
-                      }
-                      placeholder="Project Inquiry / Job Opportunity"
-                      className="w-full px-5 py-4 bg-white border-4 border-slate-900 text-slate-900 placeholder-slate-400 font-bold focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(245,158,11,1)] transition-shadow rounded-none"
-                    />
-                  </div>
-
-                  {/* Message */}
-                  <div>
-                    <label className="block text-xs font-black uppercase tracking-widest text-amber-400 mb-2">
-                      Message
-                    </label>
-                    <textarea
-                      rows={5}
-                      required
-                      value={formData.message}
-                      onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
-                      }
-                      placeholder="Hi Mohammed, I saw your work on Shopify/React and wanted to discuss..."
-                      className="w-full px-5 py-4 bg-white border-4 border-slate-900 text-slate-900 placeholder-slate-400 font-bold focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(245,158,11,1)] transition-shadow rounded-none resize-none"
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <div className="pt-4">
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full py-5 px-8 bg-amber-400 border-4 border-slate-900 text-slate-900 font-black text-lg uppercase tracking-widest shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center gap-3 transition-all hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
-                    >
-                      {isSubmitting ? (
-                        <span>Transmitting...</span>
-                      ) : (
-                        <>
-                          <span>Transmit Message</span>
-                          <Send className="w-6 h-6" />
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </form>
-              )}
+              <div className="pt-8 mt-8 border-t-2 border-slate-800">
+                <a
+                  href="#booking"
+                  className="w-full py-5 px-6 bg-amber-400 hover:bg-amber-300 border-4 border-slate-900 text-slate-900 font-black text-sm uppercase tracking-widest shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-3 text-center"
+                >
+                  <span>Book Meeting Below</span>
+                  <ExternalLink className="w-5 h-5 rotate-45" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
