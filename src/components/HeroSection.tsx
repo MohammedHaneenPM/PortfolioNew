@@ -163,13 +163,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             {/* Decorative elements behind card */}
             <div className="absolute inset-0 bg-gradient-to-br from-pink-400 to-cyan-400 blur-2xl opacity-30 -z-10 rounded-[2rem]" />
             
-            <div className="w-full max-w-lg bg-white border-4 border-slate-900 shadow-[16px_16px_0px_0px_rgba(236,72,153,1)] overflow-hidden rotate-2 hover:rotate-0 transition-transform duration-500">
+            <div className="w-full max-w-md bg-white border-4 border-slate-900 shadow-[14px_14px_0px_0px_rgba(236,72,153,1)] overflow-hidden rotate-1 hover:rotate-0 transition-transform duration-500">
               {/* Window Header */}
-              <div className="flex items-center justify-between px-5 py-3.5 bg-slate-900 border-b-4 border-slate-900">
+              <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b-4 border-slate-900">
                 <div className="flex items-center gap-2">
-                  <div className="w-3.5 h-3.5 rounded-full bg-pink-500 border border-slate-900" />
-                  <div className="w-3.5 h-3.5 rounded-full bg-yellow-400 border border-slate-900" />
-                  <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 border border-slate-900" />
+                  <div className="w-3 h-3 rounded-full bg-pink-500 border border-slate-900" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400 border border-slate-900" />
+                  <div className="w-3 h-3 rounded-full bg-cyan-400 border border-slate-900" />
                 </div>
                 
                 {/* View Switcher Tabs */}
@@ -212,28 +212,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <img
                       src={typeof profileImg === 'string' ? profileImg : profileImg.src}
                       alt="Mohammed Haneen P M"
-                      className="w-full h-full object-cover object-center filter contrast-[1.03] group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-cover object-top filter contrast-[1.02] group-hover:scale-102 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
                     
                     {/* Badge on Photo */}
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border-2 border-slate-900 text-slate-900 text-xs font-black uppercase tracking-widest shadow-[3px_3px_0px_0px_rgba(236,72,153,1)]">
+                    <div className="absolute top-3 left-3">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border-2 border-slate-900 text-slate-900 text-[11px] font-black uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(236,72,153,1)]">
                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                         Open to Work
                       </span>
-                    </div>
-
-                    {/* Bottom Tag overlay on photo */}
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                      <div className="bg-white/95 backdrop-blur-sm border-2 border-slate-900 px-3.5 py-1.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <p className="text-xs font-black uppercase tracking-wider text-slate-900">
-                          Mohammed Haneen P M
-                        </p>
-                        <p className="text-[11px] font-bold text-pink-600 uppercase tracking-widest">
-                          Frontend & React Specialist
-                        </p>
-                      </div>
                     </div>
                   </div>
                 </div>
