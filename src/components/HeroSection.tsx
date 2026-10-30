@@ -208,11 +208,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* Photo View */}
               {activeTab === 'photo' ? (
                 <div className="relative bg-slate-100 flex flex-col items-center">
-                  <div className="w-full relative h-[380px] sm:h-[420px] overflow-hidden group">
+                  <div className="w-full relative aspect-[3/4] overflow-hidden group">
                     <img
                       src={typeof profileImg === 'string' ? profileImg : profileImg.src}
                       alt="Mohammed Haneen P M"
-                      className="w-full h-full object-cover object-top filter contrast-[1.03] group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-cover object-center filter contrast-[1.03] group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
                     
