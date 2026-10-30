@@ -51,24 +51,6 @@ export const ContactSection: React.FC = () => {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
-
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      // Construct mailto link as fallback to open email client with message prepared
-      const mailtoUrl = `mailto:${DEVELOPER_PROFILE.email}?subject=${encodeURIComponent(
-        formData.subject || 'Portfolio Inquiry'
-      )}&body=${encodeURIComponent(
-        `Hi Mohammed,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-      )}`;
-      window.location.href = mailtoUrl;
-    }, 800);
-  };
-
   return (
     <section ref={sectionRef} id="contact" className="py-20 md:py-32 relative bg-white border-t-8 border-slate-900 overflow-hidden">
       {/* Background Graphic */}
