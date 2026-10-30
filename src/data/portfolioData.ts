@@ -28,6 +28,7 @@ export interface FreelanceClient {
   iconColor: string;
   bgColor: string;
   details: string;
+  liveUrl?: string;
 }
 
 export interface SkillGroup {
@@ -130,6 +131,7 @@ export const FREELANCE_CLIENTS: FreelanceClient[] = [
     iconColor: '#f87171',
     bgColor: 'rgba(239, 68, 68, 0.12)',
     details: 'Designed and engineered responsive dispatch dashboards, booking forms, and driver tracking visual interfaces with optimized loading speeds.',
+    liveUrl: 'https://boscotransport.ca',
   },
   {
     id: 'lil-whip',
@@ -140,6 +142,7 @@ export const FREELANCE_CLIENTS: FreelanceClient[] = [
     iconColor: '#a855f7',
     bgColor: 'rgba(168, 85, 247, 0.12)',
     details: 'Created an atmospheric multimedia brand experience with audio player integrations, release schedules, and interactive event promos.',
+    liveUrl: 'https://lil-whip.vercel.app',
   },
   {
     id: 'gul-nis',
@@ -150,6 +153,7 @@ export const FREELANCE_CLIENTS: FreelanceClient[] = [
     iconColor: '#f59e0b',
     bgColor: 'rgba(245, 158, 11, 0.12)',
     details: 'Crafted a bespoke e-commerce presentation for handcrafted pastries featuring custom inquiry pipelines and mobile-friendly product catalog.',
+    liveUrl: 'https://www.gulnis.in',
   },
 ];
 
