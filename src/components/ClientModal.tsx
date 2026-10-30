@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect } from 'react';
 import { X, Briefcase, CheckCircle2, Truck, Zap, Cake } from 'lucide-react';
 import { FreelanceClient } from '../data/portfolioData';

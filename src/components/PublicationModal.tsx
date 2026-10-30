@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect } from 'react';
 import { X, BookOpen, ExternalLink, FileText, CheckCircle2 } from 'lucide-react';
 import { DEVELOPER_PROFILE } from '../data/portfolioData';

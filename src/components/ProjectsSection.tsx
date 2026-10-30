@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+'use client';
+
+import React, { useState, useRef, useEffect } from 'react';
 import {
   FolderGit2,
   Sparkles,
@@ -10,12 +12,10 @@ import {
   ExternalLink,
   ChevronRight,
   Code2,
+  AlertCircle,
+  RefreshCw,
 } from 'lucide-react';
-import {
-  FEATURED_PROJECTS,
-  ProjectItem,
-  DEVELOPER_PROFILE,
-} from '../data/portfolioData';
+import { ProjectItem, DEVELOPER_PROFILE } from '../data/portfolioData';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -29,38 +29,83 @@ interface ProjectsSectionProps {
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   onSelectProject,
 }) => {
+  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const sectionRef = useRef<HTMLElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const filteredProjects = FEATURED_PROJECTS.filter((p) => {
+  const fetchProjects = async () => {
+    setIsLoading(true);
+    setFetchError(null);
+    try {
+      const res = await fetch('/api/projects');
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to load projects from database.');
+      }
+
+      // Map database format to ProjectItem
+      const mapped: ProjectItem[] = (data.projects || []).map((dbProj: any) => ({
+        id: dbProj.id,
+        title: dbProj.title,
+        description: dbProj.description,
+        categoryBadge: (dbProj.category || 'PROJECT').toUpperCase(),
+        category: dbProj.category || 'frontend',
+        accentColor: '#ec4899',
+        iconName: 'sparkles',
+        imageUrl: dbProj.image_url,
+        imagePath: dbProj.image_path,
+        liveUrl: dbProj.live_url || undefined,
+        githubUrl: dbProj.github_url || undefined,
+        tags: dbProj.tags || [],
+      }));
+
+      setProjects(mapped);
+    } catch (err: any) {
+      setFetchError(err.message || 'Error connecting to project database.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const filteredProjects = projects.filter((p) => {
     if (activeFilter === 'all') return true;
     return p.category === activeFilter;
   });
 
   useGSAP(() => {
-    // We animate the items when the filter changes or on initial scroll
-    if (gridRef.current) {
+    if (gridRef.current && filteredProjects.length > 0) {
       const cards = gridRef.current.children;
-      gsap.fromTo(cards, {
-        y: 50,
-        opacity: 0,
-        scale: 0.95
-      }, {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: "back.out(1.2)",
-        scrollTrigger: {
-          trigger: gridRef.current,
-          start: "top 85%"
+      gsap.fromTo(
+        cards,
+        {
+          y: 50,
+          opacity: 0,
+          scale: 0.95,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: 'back.out(1.2)',
+          scrollTrigger: {
+            trigger: gridRef.current,
+            start: 'top 85%',
+          },
         }
-      });
+      );
     }
-  }, { scope: sectionRef, dependencies: [activeFilter] });
+  }, { scope: sectionRef, dependencies: [activeFilter, projects.length] });
 
   const getProjectIcon = (name: ProjectItem['iconName']) => {
     switch (name) {
@@ -110,7 +155,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
           </h2>
 
           <p className="text-slate-700 text-lg sm:text-xl font-bold bg-white p-4 border-l-8 border-cyan-500 shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] inline-block rotate-1 max-w-3xl">
-            Explore highlighted applications, high-performance Shopify themes, e-commerce concepts, healthcare management platforms, and interactive experiments.
+            Projects fetched dynamically from PostgreSQL. Changes in the admin dashboard reflect live here. Click any card to launch the modal preview.
           </p>
         </div>
 
@@ -131,55 +176,116 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
           ))}
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="py-20 text-center flex flex-col items-center justify-center space-y-4">
+            <div className="w-12 h-12 border-4 border-slate-900 border-t-pink-500 rounded-full animate-spin shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]" />
+            <p className="text-sm font-black uppercase tracking-wider text-slate-700">
+              Querying projects from database...
+            </p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {!isLoading && fetchError && (
+          <div className="max-w-2xl mx-auto p-6 bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(225,29,72,1)] text-center space-y-4">
+            <div className="inline-flex p-3 bg-rose-100 border-2 border-slate-900">
+              <AlertCircle className="w-8 h-8 text-rose-600" />
+            </div>
+            <h3 className="text-xl font-black uppercase tracking-tight text-slate-900">
+              Database Connection Notice
+            </h3>
+            <p className="text-sm font-bold text-slate-600 leading-relaxed">
+              {fetchError}
+            </p>
+            <button
+              onClick={fetchProjects}
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-slate-900 text-white font-black text-xs uppercase tracking-wider border-2 border-slate-900 shadow-[3px_3px_0px_0px_rgba(6,182,212,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Retry Query</span>
+            </button>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !fetchError && filteredProjects.length === 0 && (
+          <div className="max-w-2xl mx-auto p-12 bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] text-center space-y-4">
+            <h3 className="text-2xl font-black uppercase tracking-tight text-slate-900">
+              No Projects Found
+            </h3>
+            <p className="text-sm font-bold text-slate-600">
+              No projects currently match this filter in your PostgreSQL database.
+            </p>
+          </div>
+        )}
+
         {/* Projects Cards Grid */}
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, idx) => {
-            const isEven = idx % 2 === 0;
-            return (
-              <div
-                key={project.id}
-                onClick={() => onSelectProject(project)}
-                className={`p-6 sm:p-8 bg-white border-4 border-slate-900 hover:shadow-[12px_12px_0px_0px_rgba(15,23,42,1)] transition-all duration-300 flex flex-col justify-between group cursor-pointer ${isEven ? 'shadow-[8px_8px_0px_0px_rgba(236,72,153,1)] rotate-1 hover:rotate-0' : 'shadow-[8px_8px_0px_0px_rgba(6,182,212,1)] -rotate-1 hover:rotate-0'}`}
-              >
-                <div className="space-y-6">
-                  {/* Header: Icon & Category Badge */}
-                  <div className="flex items-center justify-between">
-                    <div className="w-16 h-16 bg-slate-900 border-2 border-slate-900 flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] group-hover:scale-110 transition-transform">
-                      {getProjectIcon(project.iconName)}
+        {!isLoading && !fetchError && filteredProjects.length > 0 && (
+          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredProjects.map((project, idx) => {
+              const isEven = idx % 2 === 0;
+              return (
+                <div
+                  key={project.id}
+                  onClick={() => onSelectProject(project)}
+                  className={`p-6 sm:p-8 bg-white border-4 border-slate-900 hover:shadow-[12px_12px_0px_0px_rgba(15,23,42,1)] transition-all duration-300 flex flex-col justify-between group cursor-pointer ${
+                    isEven
+                      ? 'shadow-[8px_8px_0px_0px_rgba(236,72,153,1)] rotate-1 hover:rotate-0'
+                      : 'shadow-[8px_8px_0px_0px_rgba(6,182,212,1)] -rotate-1 hover:rotate-0'
+                  }`}
+                >
+                  {/* Project Image Preview */}
+                  {project.imageUrl && (
+                    <div className="relative h-48 sm:h-52 w-full bg-slate-100 border-2 border-slate-900 mb-6 overflow-hidden">
+                      <img
+                        src={project.imageUrl}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                  )}
+
+                  <div className="space-y-6">
+                    {/* Header: Icon & Category Badge */}
+                    <div className="flex items-center justify-between">
+                      <div className="w-14 h-14 bg-slate-900 border-2 border-slate-900 flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] group-hover:scale-110 transition-transform">
+                        {getProjectIcon(project.iconName)}
+                      </div>
+
+                      <span className="px-4 py-1.5 bg-slate-100 border-2 border-slate-900 text-xs font-black uppercase tracking-widest text-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
+                        {project.categoryBadge}
+                      </span>
                     </div>
 
-                    <span className="px-4 py-1.5 bg-slate-100 border-2 border-slate-900 text-xs font-black uppercase tracking-widest text-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]">
-                      {project.categoryBadge}
-                    </span>
+                    {/* Project Title */}
+                    <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight group-hover:text-pink-600 transition-colors flex items-center justify-between">
+                      <span>{project.title}</span>
+                      <ChevronRight className="w-6 h-6 text-slate-400 group-hover:text-pink-600 group-hover:translate-x-2 transition-all shrink-0" />
+                    </h3>
+
+                    {/* Project Description */}
+                    <p className="text-slate-700 font-bold leading-relaxed line-clamp-3 text-sm">
+                      {project.description}
+                    </p>
                   </div>
 
-                  {/* Project Title */}
-                  <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight group-hover:text-pink-600 transition-colors flex items-center justify-between">
-                    <span>{project.title}</span>
-                    <ChevronRight className="w-6 h-6 text-slate-400 group-hover:text-pink-600 group-hover:translate-x-2 transition-all" />
-                  </h3>
-
-                  {/* Project Description */}
-                  <p className="text-slate-700 font-bold leading-relaxed line-clamp-3">
-                    {project.description}
-                  </p>
+                  {/* Tags */}
+                  <div className="pt-6 mt-6 border-t-2 border-slate-200 flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 bg-slate-50 border-2 border-slate-900 text-xs font-black uppercase tracking-widest text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-
-                {/* Tags */}
-                <div className="pt-6 mt-6 border-t-2 border-slate-200 flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 bg-slate-50 border-2 border-slate-900 text-xs font-black uppercase tracking-widest text-slate-800 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Live GitHub Pages Portfolio Callout Banner */}
         <div className="mt-20 p-8 sm:p-10 bg-slate-900 border-4 border-slate-900 shadow-[16px_16px_0px_0px_rgba(6,182,212,1)] flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left relative overflow-hidden group">

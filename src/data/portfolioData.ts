@@ -7,6 +7,8 @@ export interface ProjectItem {
   category: 'all' | 'frontend' | 'ecommerce' | 'interactive' | 'fullstack';
   accentColor: string;
   iconName: 'sparkles' | 'shopping-cart' | 'activity' | 'glasses' | 'shield' | 'layers';
+  imageUrl?: string;
+  imagePath?: string;
   liveUrl?: string;
   githubUrl?: string;
   metrics?: string;
@@ -154,45 +156,38 @@ export const FREELANCE_CLIENTS: FreelanceClient[] = [
 export const SKILL_GROUPS: SkillGroup[] = [
   {
     id: 'frontend',
-    title: 'Frontend Frameworks & Core',
-    subtitle: 'Modern reactive web stacks',
+    title: 'Frontend Development',
+    subtitle: 'Modern reactive web stacks & animations',
     icon: 'code',
-    skills: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Responsive UI'],
-  },
-  {
-    id: 'styling',
-    title: 'Styling & Design Systems',
-    subtitle: 'Responsive & aesthetic layouts',
-    icon: 'palette',
-    skills: ['Tailwind CSS', 'Bootstrap', 'UI/UX', 'Figma', 'Adobe XD'],
-  },
-  {
-    id: 'cms',
-    title: 'CMS & E-Commerce',
-    subtitle: 'Custom themes & stores',
-    icon: 'shopping-bag',
-    skills: ['Shopify', 'Liquid', 'WordPress', 'SEO'],
-  },
-  {
-    id: 'animations',
-    title: 'Animations & Dynamics',
-    subtitle: 'Smooth scrolling & effects',
-    icon: 'sparkles',
-    skills: ['GSAP', 'ScrollTrigger', 'Lenis', 'Micro-Interactions'],
+    skills: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'GSAP', 'Responsive UI'],
   },
   {
     id: 'backend',
-    title: 'Backend, APIs & Data',
-    subtitle: 'Data integration & persistence',
-    icon: 'database',
-    skills: ['REST API', 'PostgreSQL', 'MySQL', 'Prisma'],
+    title: 'Backend Development',
+    subtitle: 'APIs, server runtimes & integrations',
+    icon: 'terminal',
+    skills: ['Node.js', 'Next.js Route Handlers', 'REST API', 'Server Actions', 'Microservices'],
   },
   {
-    id: 'tools',
-    title: 'Version Control & Cloud',
-    subtitle: 'Deployment & collaboration',
-    icon: 'terminal',
-    skills: ['Git', 'GitHub', 'Vercel', 'DevTools'],
+    id: 'database',
+    title: 'Database',
+    subtitle: 'Data modeling, persistence & auth',
+    icon: 'database',
+    skills: ['PostgreSQL', 'Supabase', 'MySQL', 'Prisma ORM', 'Row Level Security (RLS)'],
+  },
+  {
+    id: 'uiux',
+    title: 'UI/UX Design',
+    subtitle: 'Visual identity, wireframes & design systems',
+    icon: 'palette',
+    skills: ['Figma', 'UI/UX Systems', 'Neobrutalism', 'Micro-Interactions', 'Prototyping', 'Accessibility (a11y)'],
+  },
+  {
+    id: 'data-analytics',
+    title: 'Data Analytics',
+    subtitle: 'Metrics, visualization & simulations',
+    icon: 'sparkles',
+    skills: ['Data Visualization', 'Deloitte Job Simulation', 'Quantum Analytics', 'Performance Analytics', 'SEO Analysis'],
   },
 ];
 

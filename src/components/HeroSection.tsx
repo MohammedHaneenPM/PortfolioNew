@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef } from 'react';
 import {
   MapPin,
@@ -208,7 +210,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div className="relative bg-slate-100 flex flex-col items-center">
                   <div className="w-full relative h-[380px] sm:h-[420px] overflow-hidden group">
                     <img
-                      src={profileImg}
+                      src={typeof profileImg === 'string' ? profileImg : profileImg.src}
                       alt="Mohammed Haneen P M"
                       className="w-full h-full object-cover object-top filter contrast-[1.03] group-hover:scale-105 transition-transform duration-700"
                     />

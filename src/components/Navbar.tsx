@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, ArrowRight, ExternalLink } from 'lucide-react';
 import { DEVELOPER_PROFILE } from '../data/portfolioData';
@@ -32,7 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onContactClick }) => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      const sections = ['home', 'about', 'skills', 'projects', 'contact'];
+      const sections = ['home', 'about', 'skills', 'projects', 'contact', 'booking'];
       for (const section of sections) {
         const el = document.getElementById(section);
         if (el) {
@@ -55,6 +57,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onContactClick }) => {
     { name: 'Skills', href: '#skills' },
     { name: 'Projects', href: '#projects' },
     { name: 'Contact', href: '#contact' },
+    { name: 'Book Meeting', href: '#booking' },
   ];
 
   return (

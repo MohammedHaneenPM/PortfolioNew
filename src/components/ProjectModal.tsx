@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect } from 'react';
 import { X, ExternalLink, Github, CheckCircle2, Layers } from 'lucide-react';
 import { ProjectItem } from '../data/portfolioData';
@@ -38,6 +40,17 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
         >
           <X className="w-6 h-6" />
         </button>
+
+        {/* Project Image Lightbox Display */}
+        {project.imageUrl && (
+          <div className="mb-6 border-4 border-slate-900 overflow-hidden max-h-72 bg-slate-100">
+            <img
+              src={project.imageUrl}
+              alt={project.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
 
         {/* Modal Header */}
         <div className="space-y-4 pr-12">
