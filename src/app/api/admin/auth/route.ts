@@ -62,6 +62,43 @@ export async function POST(request: Request) {
 }
 
 /**
+ * PUT /api/admin/auth (Forgot Password)
+ * Sends password recovery email via Supabase Auth
+ */
+export async function PUT(request: Request) {
+  try {
+    const { email } = await request.json();
+    if (!email) {
+      return NextResponse.json({ error: 'Email is required.' }, { status: 400 });
+    }
+
+    const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+    if (adminEmail && email.trim().toLowerCase() !== adminEmail) {
+      return NextResponse.json(
+        { error: 'Email does not match the registered administrator account.' },
+        { status: 403 }
+      );
+    }
+
+    const supabase = await createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+      redirectTo: `${new URL(request.url).origin}/admin/reset-password`,
+    });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Password reset link dispatched. Please check your inbox.',
+    });
+  } catch (err: any) {
+    return NextResponse.json({ error: err?.message || 'Failed to dispatch reset email.' }, { status: 500 });
+  }
+}
+
+/**
  * POST /api/admin/auth/logout
  * Signs out current administrator and clears auth cookies.
  */
