@@ -28,19 +28,21 @@ export default async function AdminDashboardPage() {
   try {
     const adminSupabase = createAdminClient();
 
-    const [projectsRes, meetingsRes] = await Promise.all([
-      adminSupabase.from('projects').select('*').order('created_at', { ascending: false }),
-      adminSupabase.from('meetings').select('*').order('created_at', { ascending: false }),
-    ]);
+    if (adminSupabase) {
+      const [projectsRes, meetingsRes] = await Promise.all([
+        adminSupabase.from('projects').select('*').order('created_at', { ascending: false }),
+        adminSupabase.from('meetings').select('*').order('created_at', { ascending: false }),
+      ]);
 
-    if (projectsRes.data) {
-      projectCount = projectsRes.data.length;
-      recentProjects = projectsRes.data.slice(0, 4);
-    }
+      if (projectsRes.data) {
+        projectCount = projectsRes.data.length;
+        recentProjects = projectsRes.data.slice(0, 4);
+      }
 
-    if (meetingsRes.data) {
-      meetingCount = meetingsRes.data.length;
-      recentMeetings = meetingsRes.data.slice(0, 3);
+      if (meetingsRes.data) {
+        meetingCount = meetingsRes.data.length;
+        recentMeetings = meetingsRes.data.slice(0, 3);
+      }
     }
   } catch (err) {
     // Graceful fallback for initial zero-database state

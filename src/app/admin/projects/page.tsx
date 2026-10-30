@@ -14,11 +14,13 @@ export default async function AdminProjectsListPage() {
   let projects: any[] = [];
   try {
     const adminSupabase = createAdminClient();
-    const { data } = await adminSupabase
-      .from('projects')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (data) projects = data;
+    if (adminSupabase) {
+      const { data } = await adminSupabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (data) projects = data;
+    }
   } catch (err) {
     // Graceful fallback
   }
