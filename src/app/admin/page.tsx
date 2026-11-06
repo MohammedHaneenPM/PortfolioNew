@@ -8,9 +8,9 @@ import {
   Plus,
   ExternalLink,
   Layers,
-  LogOut,
   Sparkles,
 } from 'lucide-react';
+import { AdminLogoutButton } from './AdminLogoutButton';
 
 export default async function AdminDashboardPage() {
   // 1. Strict Server-Side Session & Role Verification
@@ -72,20 +72,7 @@ export default async function AdminDashboardPage() {
               <span>Live Site</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </Link>
-            <form action="/api/admin/auth" method="DELETE">
-              <button
-                type="button"
-                onClick={async () => {
-                  'use client';
-                  await fetch('/api/admin/auth', { method: 'DELETE' });
-                  window.location.href = '/admin/login';
-                }}
-                className="px-3 py-1.5 bg-rose-500 hover:bg-rose-600 text-white font-black text-xs uppercase tracking-wider border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center gap-1 cursor-pointer"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Logout</span>
-              </button>
-            </form>
+            <AdminLogoutButton />
           </div>
         </div>
       </header>
