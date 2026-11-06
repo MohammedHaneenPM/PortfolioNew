@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Mail,
   Phone,
@@ -10,40 +10,40 @@ import {
   Instagram,
   Copy,
   Check,
-  ExternalLink,
+  Send,
+  Sparkles,
 } from 'lucide-react';
 import { DEVELOPER_PROFILE } from '../data/portfolioData';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export const ContactSection: React.FC = () => {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const infoRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    // Animate contact info cards
-    if (infoRef.current) {
-      gsap.fromTo(infoRef.current.children, 
-        { y: 30, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: infoRef.current,
-            start: "top 85%",
-          },
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "back.out(1.2)",
-          clearProps: "all"
-        }
-      );
-    }
-  }, { scope: sectionRef });
+  // Neon cursor trail
+  const [cursorPos, setCursorPos] = useState({ x: -9999, y: -9999 });
+  const [isInsideSection, setIsInsideSection] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = section.getBoundingClientRect();
+      setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    };
+    const handleMouseEnter = () => setIsInsideSection(true);
+    const handleMouseLeave = () => {
+      setIsInsideSection(false);
+      setCursorPos({ x: -9999, y: -9999 });
+    };
+    section.addEventListener('mousemove', handleMouseMove);
+    section.addEventListener('mouseenter', handleMouseEnter);
+    section.addEventListener('mouseleave', handleMouseLeave);
+    return () => {
+      section.removeEventListener('mousemove', handleMouseMove);
+      section.removeEventListener('mouseenter', handleMouseEnter);
+      section.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
 
   const handleCopy = (text: string, fieldName: string) => {
     navigator.clipboard.writeText(text);
@@ -52,215 +52,185 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section ref={sectionRef} id="contact" className="py-20 md:py-32 relative bg-white border-t-8 border-slate-900 overflow-hidden">
-      {/* Background Graphic */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0, #000 2px, transparent 2px, transparent 10px)' }} />
+    <section 
+      ref={sectionRef} 
+      id="contact" 
+      className="py-24 md:py-32 relative bg-[#0c0c0f] text-white border-b-4 border-black overflow-hidden"
+    >
+      {/* Background Matrix/Grid */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-15"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px',
+        }}
+      />
+      <div className="absolute inset-0 pointer-events-none opacity-20 y2k-noise-overlay" />
+
+      {/* Neon cursor-reveal spotlight */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+        style={{
+          opacity: isInsideSection ? 1 : 0,
+          background: `radial-gradient(600px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255,0,127,0.14) 0%, rgba(0,229,255,0.07) 35%, transparent 70%)`,
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-200"
+        style={{
+          opacity: isInsideSection ? 1 : 0,
+          background: `radial-gradient(160px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255,0,127,0.22) 0%, transparent 100%)`,
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          opacity: isInsideSection ? 1 : 0,
+          backgroundImage: `linear-gradient(to right, rgba(255,0,127,0.5) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,0,127,0.5) 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
+          WebkitMaskImage: `radial-gradient(380px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, transparent 100%)`,
+          maskImage: `radial-gradient(380px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, transparent 100%)`,
+          transition: 'opacity 0.2s',
+        }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
         {/* Section Header */}
-        <div className="space-y-6 mb-16 max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-6 py-2 bg-amber-400 border-4 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] text-sm font-black text-slate-900 uppercase tracking-widest rotate-2">
-            <Mail className="w-5 h-5" />
-            <span>Get In Touch</span>
+        <div className="space-y-4 mb-16 text-center max-w-3xl mx-auto">
+          <div className="inline-block relative">
+            <div className="bg-[#ff007f] text-black px-6 py-1 font-['Chakra_Petch',sans-serif] font-black uppercase tracking-widest text-xs sm:text-sm border-2 border-black shadow-[4px_4px_0px_#fff] transform rotate-1">
+              OPEN COMMS // TRANSMIT MESSAGE
+            </div>
           </div>
 
-          <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-slate-900 uppercase">
-            Let’s Build Something <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-amber-500 drop-shadow-sm">
-              Extraordinary Together
-            </span>
+          <h2 className="text-4xl sm:text-6xl font-['Chakra_Petch',sans-serif] font-black italic tracking-tighter uppercase text-white">
+            LET&apos;S BUILD <span className="text-[#ff007f]">SOMETHING</span> EPIC
           </h2>
 
-          <p className="text-slate-700 text-lg sm:text-2xl font-bold bg-white p-4 border-b-8 border-r-8 border-t-4 border-l-4 border-slate-900 shadow-[6px_6px_0px_0px_rgba(245,158,11,1)] inline-block -rotate-1">
-            Whether you have an upcoming project, freelance engagement, or job opportunity, my inbox is always open.
+          <p className="text-slate-300 font-mono text-sm sm:text-base">
+            Have a project in mind, need frontend engineering firepower, or want to discuss opportunities? Connect directly through any channel.
           </p>
         </div>
 
-        {/* Contact Grid: Left details & social, Right form */}
-        {/* Contact Grid: Direct Communication Channels & Meeting Invitation */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch" ref={infoRef}>
-          {/* Left Column: Direct Communication Cards */}
-          <div className="lg:col-span-7 space-y-6">
-            {/* Email Card */}
-            <div className="p-6 rounded-none bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(236,72,153,1)] hover:translate-x-1 hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(236,72,153,1)] transition-all group flex items-start justify-between">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-pink-100 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex items-center justify-center text-pink-600 shrink-0 mt-0.5">
-                  <Mail className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="text-xs font-black uppercase tracking-widest text-slate-500">
-                    Email Address
-                  </div>
-                  <a
-                    href={`mailto:${DEVELOPER_PROFILE.email}`}
-                    className="text-base sm:text-xl font-black text-slate-900 hover:text-pink-600 transition-colors block mt-1 break-all"
-                  >
-                    {DEVELOPER_PROFILE.email}
-                  </a>
-                  <div className="text-xs font-bold text-pink-500 mt-1 uppercase tracking-widest">
-                    Direct Email • Typically replies within 24 hours
-                  </div>
-                </div>
+        {/* Contact Channels Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          
+          {/* Email Terminal Card */}
+          <div className="bg-[#141418] border-2 border-white/20 shadow-[8px_8px_0px_#000] p-6 sm:p-8 flex flex-col justify-between hover:border-[#ff007f] transition-colors">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-['VT323',monospace] text-sm text-[#ff007f]">CHANNEL: 01 // DIRECT MAIL</span>
+                <Mail className="w-6 h-6 text-[#ff007f]" />
               </div>
+              <h3 className="text-2xl font-['Chakra_Petch',sans-serif] font-black text-white uppercase">
+                EMAIL DISPATCH
+              </h3>
+              <p className="text-slate-400 font-mono text-xs mt-1">
+                Best for project proposals, contracts, &amp; in-depth technical discussions.
+              </p>
+              <div className="mt-4 p-3 bg-black border border-white/20 font-mono text-sm text-[#ff007f] break-all">
+                {DEVELOPER_PROFILE.email}
+              </div>
+            </div>
 
+            <div className="flex items-center gap-3 mt-6">
+              <a
+                href={`mailto:${DEVELOPER_PROFILE.email}`}
+                className="flex-1 py-3 bg-[#ff007f] hover:bg-[#ff1a8c] text-white font-['Chakra_Petch',sans-serif] font-black text-xs uppercase tracking-wider border border-black shadow-[3px_3px_0px_#000] text-center"
+              >
+                OPEN MAIL CLIENT ↗
+              </a>
               <button
                 onClick={() => handleCopy(DEVELOPER_PROFILE.email, 'email')}
-                className="p-3 bg-slate-100 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] hover:bg-pink-100 text-slate-900 transition-colors cursor-pointer active:translate-y-1 active:shadow-none"
-                title="Copy email"
+                className="px-4 py-3 bg-white text-black font-mono font-bold text-xs uppercase border border-black shadow-[3px_3px_0px_#000] hover:bg-slate-200"
+                title="Copy to clipboard"
               >
-                {copiedField === 'email' ? (
-                  <Check className="w-5 h-5 text-emerald-600" />
-                ) : (
-                  <Copy className="w-5 h-5" />
-                )}
+                {copiedField === 'email' ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
+          </div>
 
-            {/* Phone & WhatsApp Card */}
-            <div className="p-6 rounded-none bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(16,185,129,1)] hover:translate-x-1 hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(16,185,129,1)] transition-all group flex items-start justify-between">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-emerald-100 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex items-center justify-center text-emerald-600 shrink-0 mt-0.5">
-                  <Phone className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="text-xs font-black uppercase tracking-widest text-slate-500">
-                    Phone & WhatsApp
-                  </div>
-                  <a
-                    href="https://wa.me/918547896740"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-base sm:text-xl font-black text-slate-900 hover:text-emerald-600 transition-colors block mt-1"
-                  >
-                    {DEVELOPER_PROFILE.phone}
-                  </a>
-                  <div className="text-xs font-bold text-emerald-500 mt-1 uppercase tracking-widest">
-                    Direct Line & WhatsApp Available
-                  </div>
-                </div>
+          {/* Phone / WhatsApp Card */}
+          <div className="bg-[#141418] border-2 border-white/20 shadow-[8px_8px_0px_#000] p-6 sm:p-8 flex flex-col justify-between hover:border-[#00e5ff] transition-colors">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-['VT323',monospace] text-sm text-[#00e5ff]">CHANNEL: 02 // DIRECT LINE</span>
+                <Phone className="w-6 h-6 text-[#00e5ff]" />
               </div>
+              <h3 className="text-2xl font-['Chakra_Petch',sans-serif] font-black text-white uppercase">
+                PHONE &amp; WHATSAPP
+              </h3>
+              <p className="text-slate-400 font-mono text-xs mt-1">
+                Quick discussions, rapid coordination, and voice calls.
+              </p>
+              <div className="mt-4 p-3 bg-black border border-white/20 font-mono text-sm text-[#00e5ff]">
+                {DEVELOPER_PROFILE.phone}
+              </div>
+            </div>
 
+            <div className="flex items-center gap-3 mt-6">
+              <a
+                href={`tel:${DEVELOPER_PROFILE.phone.replace(/\s+/g, '')}`}
+                className="flex-1 py-3 bg-[#00e5ff] hover:bg-[#33ebff] text-black font-['Chakra_Petch',sans-serif] font-black text-xs uppercase tracking-wider border border-black shadow-[3px_3px_0px_#000] text-center"
+              >
+                CALL DIRECTLY ↗
+              </a>
               <button
                 onClick={() => handleCopy(DEVELOPER_PROFILE.phone, 'phone')}
-                className="p-3 bg-slate-100 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] hover:bg-emerald-100 text-slate-900 transition-colors cursor-pointer active:translate-y-1 active:shadow-none"
-                title="Copy phone"
+                className="px-4 py-3 bg-white text-black font-mono font-bold text-xs uppercase border border-black shadow-[3px_3px_0px_#000] hover:bg-slate-200"
+                title="Copy to clipboard"
               >
-                {copiedField === 'phone' ? (
-                  <Check className="w-5 h-5 text-emerald-600" />
-                ) : (
-                  <Copy className="w-5 h-5" />
-                )}
+                {copiedField === 'phone' ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
-
-            {/* Location & Remote Availability Card */}
-            <div className="p-6 rounded-none bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(168,85,247,1)] hover:translate-x-1 hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(168,85,247,1)] transition-all flex items-start gap-4">
-              <div className="w-12 h-12 bg-purple-100 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] flex items-center justify-center text-purple-600 shrink-0 mt-0.5">
-                <MapPin className="w-6 h-6" />
-              </div>
-              <div>
-                <div className="text-xs font-black uppercase tracking-widest text-slate-500">
-                  Location & Availability
-                </div>
-                <div className="text-base sm:text-lg font-black text-slate-900 mt-1">
-                  {DEVELOPER_PROFILE.location}
-                </div>
-                <div className="text-xs font-bold text-purple-500 mt-1 uppercase tracking-widest">
-                  Open to Remote Worldwide & Freelance Contracts
-                </div>
-              </div>
-            </div>
-
-            {/* Connect on Social Media */}
-            <div className="p-6 rounded-none bg-white border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] space-y-4">
-              <div>
-                <h4 className="text-lg font-black text-slate-900 uppercase">
-                  Social Profiles & Networks
-                </h4>
-                <p className="text-xs font-bold text-slate-600 mt-1">
-                  Check out repositories, connect professionally, or view creative experiments.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-3 pt-2">
-                <a
-                  href={DEVELOPER_PROFILE.social.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-5 py-3 bg-purple-100 border-2 border-slate-900 text-xs font-black uppercase tracking-widest text-slate-900 inline-flex items-center gap-2 transition-all hover:translate-x-1 hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]"
-                >
-                  <Github className="w-4 h-4 text-purple-600" />
-                  <span>GitHub</span>
-                </a>
-                <a
-                  href={DEVELOPER_PROFILE.social.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-5 py-3 bg-cyan-100 border-2 border-slate-900 text-xs font-black uppercase tracking-widest text-slate-900 inline-flex items-center gap-2 transition-all hover:translate-x-1 hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]"
-                >
-                  <Linkedin className="w-4 h-4 text-cyan-600" />
-                  <span>LinkedIn</span>
-                </a>
-                <a
-                  href={DEVELOPER_PROFILE.social.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-5 py-3 bg-pink-100 border-2 border-slate-900 text-xs font-black uppercase tracking-widest text-slate-900 inline-flex items-center gap-2 transition-all hover:translate-x-1 hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)]"
-                >
-                  <Instagram className="w-4 h-4 text-pink-600" />
-                  <span>Instagram</span>
-                </a>
-              </div>
-            </div>
           </div>
 
-          {/* Right Column: Book Meeting Fast-Track Hero Card */}
-          <div className="lg:col-span-5 flex flex-col">
-            <div className="p-8 sm:p-10 bg-slate-900 border-4 border-slate-900 shadow-[16px_16px_0px_0px_rgba(245,158,11,1)] relative rounded-none text-white h-full flex flex-col justify-between">
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-400 text-slate-900 text-xs font-black uppercase tracking-widest mb-6 shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] -rotate-2">
-                  <span>Fast Response</span>
-                </div>
+        </div>
 
-                <h3 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tighter leading-tight">
-                  Prefer a Face-to-Face <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-pink-500">
-                    Discussion?
-                  </span>
-                </h3>
+        {/* Social Cyber Deck */}
+        <div className="mt-12 max-w-4xl mx-auto p-6 bg-[#111115] border-2 border-white/20 shadow-[6px_6px_0px_#000] flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <MapPin className="w-5 h-5 text-[#ff007f]" />
+            <span className="font-mono text-xs sm:text-sm text-slate-300">
+              LOCATION: <span className="text-white font-bold">{DEVELOPER_PROFILE.location}</span>
+            </span>
+          </div>
 
-                <p className="text-slate-300 font-semibold text-sm sm:text-base leading-relaxed mt-4">
-                  Skip the back-and-forth emails. Pick a specific date and time on my calendar right below. Meeting requests are verified and confirmed automatically.
-                </p>
-
-                <div className="mt-8 space-y-4 border-t-2 border-slate-800 pt-6">
-                  <div className="flex items-center gap-3 text-sm font-bold text-slate-200">
-                    <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full" />
-                    <span>Real-time availability slot selection</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm font-bold text-slate-200">
-                    <div className="w-2.5 h-2.5 bg-pink-400 rounded-full" />
-                    <span>Automated email confirmation sent to both of us</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm font-bold text-slate-200">
-                    <div className="w-2.5 h-2.5 bg-amber-400 rounded-full" />
-                    <span>Direct Google Meet / Zoom link setup</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-8 mt-8 border-t-2 border-slate-800">
-                <a
-                  href="#booking"
-                  className="w-full py-5 px-6 bg-amber-400 hover:bg-amber-300 border-4 border-slate-900 text-slate-900 font-black text-sm uppercase tracking-widest shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-3 text-center"
-                >
-                  <span>Book Meeting Below</span>
-                  <ExternalLink className="w-5 h-5 rotate-45" />
-                </a>
-              </div>
-            </div>
+          <div className="flex items-center gap-3">
+            <a
+              href={DEVELOPER_PROFILE.social.github}
+              target="_blank"
+              rel="noreferrer"
+              className="p-3 bg-black border border-white/20 hover:border-[#ff007f] hover:text-[#ff007f] transition-colors"
+              title="GitHub"
+            >
+              <Github className="w-5 h-5" />
+            </a>
+            <a
+              href={DEVELOPER_PROFILE.social.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="p-3 bg-black border border-white/20 hover:border-[#00e5ff] hover:text-[#00e5ff] transition-colors"
+              title="LinkedIn"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+            <a
+              href={DEVELOPER_PROFILE.social.instagram}
+              target="_blank"
+              rel="noreferrer"
+              className="p-3 bg-black border border-white/20 hover:border-[#ff007f] hover:text-[#ff007f] transition-colors"
+              title="Instagram"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
           </div>
         </div>
+
       </div>
     </section>
   );

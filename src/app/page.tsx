@@ -34,12 +34,12 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 relative selection:bg-pink-500/30 selection:text-pink-900">
+    <div className="min-h-screen bg-[#0d0d0f] text-slate-100 relative selection:bg-[#ff007f] selection:text-white">
       {/* Background grid pattern */}
       <div 
-        className="fixed inset-0 pointer-events-none opacity-[0.05]"
+        className="fixed inset-0 pointer-events-none opacity-[0.08]"
         style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0,0,0,0.9) 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }}
       />
