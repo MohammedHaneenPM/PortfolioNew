@@ -42,8 +42,8 @@ export interface SkillGroup {
 export const DEVELOPER_PROFILE = {
   name: 'Mohammed Haneen P M',
   shortName: 'Mohammed Haneen',
-  role: 'Frontend Developer',
-  specialty: 'React & Next.js Specialist',
+  role: 'Full Stack Developer',
+  specialty: 'Java Full Stack & Modern Web Specialist',
   location: 'Manjeri, Malappuram, Kerala, India',
   email: 'connect.haneen@gmail.com',
   phone: '+91 85478 96740',
@@ -55,7 +55,7 @@ export const DEVELOPER_PROFILE = {
     linkedin: 'https://linkedin.com/in/mohammedhaneenpm',
     instagram: 'https://instagram.com/mohammedhaneen.pm',
   },
-  bio: 'Frontend-focused developer with practical experience in React, JavaScript/TypeScript, Next.js, WordPress, responsive UI development, Shopify, animations, and SEO. Crafting high-performance, visually compelling web applications.',
+  bio: 'Full Stack developer with solid experience across React, Next.js, TypeScript, REST APIs, and responsive design, actively expanding enterprise backend mastery with Java Full Stack development (Java, Spring Boot, microservices, databases). Crafting high-performance, scalable web systems.',
   stats: [
     { label: 'FEATURED PROJECTS', value: '6+' },
     { label: 'FREELANCE CLIENTS', value: '3+' },
@@ -84,16 +84,16 @@ export const DEVELOPER_PROFILE = {
   ],
   careerGoals: [
     {
-      title: 'More Freelance Clients',
-      desc: 'Partnering with businesses worldwide to craft top-tier storefronts and web apps.',
+      title: 'Java Full Stack Roles',
+      desc: 'Securing top developer roles building enterprise backend architectures with Java, Spring Boot, and robust cloud services.',
     },
     {
-      title: 'Job in an MNC',
-      desc: 'Contributing as a frontend engineer to large-scale distributed systems.',
+      title: 'Full-Stack Distributed Systems',
+      desc: 'Architecting high-scale frontend & microservice architectures for global technology companies.',
     },
     {
-      title: 'Full-Stack Development',
-      desc: 'Expanding end-to-end full-stack architectures.',
+      title: 'Freelance & Client Platforms',
+      desc: 'Partnering with businesses worldwide to craft high-conversion web platforms and custom portals.',
     },
   ],
   languages: ['English', 'Hindi', 'Malayalam'],
@@ -102,23 +102,24 @@ export const DEVELOPER_PROFILE = {
 
 export const CODE_SNIPPET = `const developer = {
   name: 'Mohammed Haneen P M',
-  role: 'Frontend Developer',
+  role: 'Full Stack Developer',
+  specialty: 'Java Full Stack & Modern Web',
   location: 'Manjeri, Kerala, India',
   degree: 'B.Tech CSE (2022-2026)',
   college: 'MEA Engineering College',
-  focus: ['React', 'Next.js', 'TypeScript', 'UI/UX'],
+  stack: ['Java', 'Spring Boot', 'React', 'Next.js', 'PostgreSQL'],
   availableForHire: true
 };`;
 
 export const TICKER_ITEMS = [
-  'REACT & NEXT.JS',
-  'GSAP & LENIS ANIMATIONS',
-  'SHOPIFY & LIQUID',
-  'UI/UX & FIGMA',
-  'TAILWIND CSS',
-  'TYPESCRIPT ARCHITECTURE',
-  'RESPONSIVE WEB DESIGN',
-  'REST APIS & PRISMA',
+  'JAVA FULL STACK DEVELOPER',
+  'SPRING BOOT & REST APIS',
+  'REACT & NEXT.JS SPECIALIST',
+  'POSTGRESQL & MYSQL',
+  'TYPESCRIPT & MICROSERVICES',
+  'GSAP & INTERACTIVE UI',
+  'UI/UX & FIGMA SYSTEMS',
+  'ENTERPRISE WEB APPS',
 ];
 
 export const FREELANCE_CLIENTS: FreelanceClient[] = [
@@ -159,6 +160,13 @@ export const FREELANCE_CLIENTS: FreelanceClient[] = [
 
 export const SKILL_GROUPS: SkillGroup[] = [
   {
+    id: 'java-fullstack',
+    title: 'Java Full Stack & Backend',
+    subtitle: 'Core Java, enterprise runtimes & microservices',
+    icon: 'terminal',
+    skills: ['Java', 'Spring Boot', 'RESTful APIs', 'Microservices Architecture', 'Maven', 'Node.js', 'Next.js API Routes'],
+  },
+  {
     id: 'frontend',
     title: 'Frontend Development',
     subtitle: 'Modern reactive web stacks & animations',
@@ -166,18 +174,11 @@ export const SKILL_GROUPS: SkillGroup[] = [
     skills: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'GSAP', 'Responsive UI'],
   },
   {
-    id: 'backend',
-    title: 'Backend Development',
-    subtitle: 'APIs, server runtimes & integrations',
-    icon: 'terminal',
-    skills: ['Node.js', 'Next.js Route Handlers', 'REST API', 'Server Actions', 'Microservices'],
-  },
-  {
     id: 'database',
-    title: 'Database',
-    subtitle: 'Data modeling, persistence & auth',
+    title: 'Databases & ORM',
+    subtitle: 'Data modeling, persistence & transactions',
     icon: 'database',
-    skills: ['PostgreSQL', 'Supabase', 'MySQL', 'Prisma ORM', 'Row Level Security (RLS)'],
+    skills: ['PostgreSQL', 'MySQL', 'Prisma ORM', 'Supabase', 'SQL Queries', 'Row Level Security'],
   },
   {
     id: 'uiux',
@@ -188,10 +189,10 @@ export const SKILL_GROUPS: SkillGroup[] = [
   },
   {
     id: 'data-analytics',
-    title: 'Data Analytics',
-    subtitle: 'Metrics, visualization & simulations',
+    title: 'Data & Engineering Practice',
+    subtitle: 'Metrics, simulation & system testing',
     icon: 'sparkles',
-    skills: ['Data Visualization', 'Deloitte Job Simulation', 'Quantum Analytics', 'Performance Analytics', 'SEO Analysis'],
+    skills: ['Data Visualization', 'Deloitte Job Simulation', 'Quantum Analytics', 'Git & GitHub', 'SEO & Performance'],
   },
 ];
 

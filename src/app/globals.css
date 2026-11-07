@@ -2,12 +2,12 @@
 
 @layer base {
   * {
-    border-color: rgba(0, 0, 0, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
   }
   
   html {
     scroll-behavior: smooth;
-    color-scheme: light;
+    color-scheme: dark;
   }
 }
 
@@ -186,13 +186,15 @@
 }
 
 @keyframes progress-shimmer {
-  0% { width: 15%; }
-  50% { width: 85%; }
-  100% { width: 15%; }
+  0% { transform: scaleX(0.15); }
+  50% { transform: scaleX(0.85); }
+  100% { transform: scaleX(0.15); }
 }
 
 .animate-y2k-progress {
+  transform-origin: left;
   animation: progress-shimmer 4s ease-in-out infinite;
+  will-change: transform;
 }
 
 @keyframes cd-spin {
@@ -202,4 +204,57 @@
 
 .animate-cd-spin {
   animation: cd-spin 18s linear infinite;
+  will-change: transform;
+}
+
+/* 3D Orbiting Planet & Vector Ring Animations */
+@keyframes orbit-spin-y {
+  0% {
+    transform: rotateX(68deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(68deg) rotateZ(360deg);
+  }
+}
+
+@keyframes orbit-spin-reverse {
+  0% {
+    transform: rotateX(60deg) rotateY(25deg) rotateZ(360deg);
+  }
+  100% {
+    transform: rotateX(60deg) rotateY(25deg) rotateZ(0deg);
+  }
+}
+
+@keyframes float-y2k-logo {
+  0%, 100% {
+    transform: translateY(0px) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(2deg);
+  }
+}
+
+.animate-orbit-ring {
+  animation: orbit-spin-y 22s linear infinite;
+  will-change: transform;
+}
+
+.animate-orbit-ring-reverse {
+  animation: orbit-spin-reverse 16s linear infinite;
+  will-change: transform;
+}
+
+.animate-float-logo {
+  animation: float-y2k-logo 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

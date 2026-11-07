@@ -27,12 +27,17 @@ export const SkillsSection: React.FC = () => {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    let animationFrameId: number;
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = section.getBoundingClientRect();
-      setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        const rect = section.getBoundingClientRect();
+        setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      });
     };
     const handleMouseEnter = () => setIsInsideSection(true);
     const handleMouseLeave = () => {
+      cancelAnimationFrame(animationFrameId);
       setIsInsideSection(false);
       setCursorPos({ x: -9999, y: -9999 });
     };
@@ -40,6 +45,7 @@ export const SkillsSection: React.FC = () => {
     section.addEventListener('mouseenter', handleMouseEnter);
     section.addEventListener('mouseleave', handleMouseLeave);
     return () => {
+      cancelAnimationFrame(animationFrameId);
       section.removeEventListener('mousemove', handleMouseMove);
       section.removeEventListener('mouseenter', handleMouseEnter);
       section.removeEventListener('mouseleave', handleMouseLeave);

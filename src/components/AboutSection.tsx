@@ -55,16 +55,21 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     const section = sectionRef.current;
     if (!section) return;
 
+    let animationFrameId: number;
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = section.getBoundingClientRect();
-      setCursorPos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        const rect = section.getBoundingClientRect();
+        setCursorPos({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        });
       });
     };
 
     const handleMouseEnter = () => setIsInsideSection(true);
     const handleMouseLeave = () => {
+      cancelAnimationFrame(animationFrameId);
       setIsInsideSection(false);
       setCursorPos({ x: -9999, y: -9999 });
     };
@@ -74,6 +79,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     section.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
+      cancelAnimationFrame(animationFrameId);
       section.removeEventListener('mousemove', handleMouseMove);
       section.removeEventListener('mouseenter', handleMouseEnter);
       section.removeEventListener('mouseleave', handleMouseLeave);
@@ -105,6 +111,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
       const allPoints = [{ x: startX, y: startY }, ...nodeCoords, { x: startX, y: endY }];
 
+      // Generate a smooth continuous spline passing through all node center coordinates
       let d = `M ${allPoints[0].x} ${allPoints[0].y}`;
       for (let i = 0; i < allPoints.length - 1; i++) {
         const p0 = allPoints[i];
@@ -118,34 +125,99 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
         if (t.vars.id === 'arrow-scroll') t.kill();
       });
 
+      // Allow DOM to render updated SVG path before calculating path lengths
       requestAnimationFrame(() => {
-        const pathElem = svgPathRef.current;
-        if (!pathElem) return;
+        setTimeout(() => {
+          const pathElem = svgPathRef.current;
+          if (!pathElem) return;
 
-        const pathLength = pathElem.getTotalLength();
-        if (pathLength === 0) return;
+          const pathLength = pathElem.getTotalLength();
+          if (pathLength === 0) return;
 
-        const startPt = pathElem.getPointAtLength(0);
-        gsap.set(markerRef.current, { left: startPt.x, top: startPt.y });
+          // Find the exact proportional length along path for each node coordinate
+          const samples = 400;
+          const nodeProgressList: number[] = nodeCoords.map((coord) => {
+            let closestProgress = 0;
+            let minDistance = Infinity;
+            for (let s = 0; s <= samples; s++) {
+              const frac = s / samples;
+              const pt = pathElem.getPointAtLength(frac * pathLength);
+              const dist = Math.hypot(pt.x - coord.x, pt.y - coord.y);
+              if (dist < minDistance) {
+                minDistance = dist;
+                closestProgress = frac;
+              }
+            }
+            return closestProgress;
+          });
 
-        const progressObj = { progress: 0 };
-        gsap.to(progressObj, {
-          progress: 1,
-          ease: 'none',
-          scrollTrigger: {
-            id: 'arrow-scroll',
-            trigger: timelineRef.current,
-            start: 'top 50%',
-            end: 'bottom 50%',
-            scrub: true,
-            onUpdate: (self) => {
-              if (!pathElem || !markerRef.current) return;
-              const pt = pathElem.getPointAtLength(self.progress * pathLength);
-              markerRef.current.style.left = `${pt.x}px`;
-              markerRef.current.style.top = `${pt.y}px`;
+          // Construct a mapping function from scroll progress (0..1) to path progress (0..1)
+          // Whenever the marker reaches a node, it lingers during scrolling (a pause threshold)
+          const mapScrollToPath = (scrollProgress: number): number => {
+            const N = nodeProgressList.length;
+            if (N === 0) return scrollProgress;
+
+            // Pause weight at each node: 0.2 means user scrolls through a dedicated reading window
+            const pauseWeight = 0.22;
+            const totalPause = N * pauseWeight;
+            const travelWeight = 1.0;
+            const totalScale = travelWeight + totalPause;
+
+            let cumulative = 0;
+            let prevPathP = 0;
+
+            for (let i = 0; i < N; i++) {
+              const currNodePathP = nodeProgressList[i];
+              const travelSeg = (currNodePathP - prevPathP) * travelWeight;
+              
+              // Travel segment to this node
+              const segStartScroll = cumulative / totalScale;
+              const segEndScroll = (cumulative + travelSeg) / totalScale;
+              if (scrollProgress < segEndScroll) {
+                const segT = (scrollProgress - segStartScroll) / (segEndScroll - segStartScroll || 1);
+                return prevPathP + segT * (currNodePathP - prevPathP);
+              }
+              cumulative += travelSeg;
+
+              // Pause segment AT this node
+              const pauseEndScroll = (cumulative + pauseWeight) / totalScale;
+              if (scrollProgress <= pauseEndScroll) {
+                return currNodePathP; // Holds steady at the node
+              }
+              cumulative += pauseWeight;
+              prevPathP = currNodePathP;
+            }
+
+            // Final segment from last node to end of path
+            const finalTravelSeg = (1.0 - prevPathP) * travelWeight;
+            const finalStartScroll = cumulative / totalScale;
+            const segT = Math.min(1, Math.max(0, (scrollProgress - finalStartScroll) / ((1 - finalStartScroll) || 1)));
+            return prevPathP + segT * (1.0 - prevPathP);
+          };
+
+          const startPt = pathElem.getPointAtLength(0);
+          gsap.set(markerRef.current, { left: startPt.x, top: startPt.y });
+
+          const progressObj = { scrollVal: 0 };
+          gsap.to(progressObj, {
+            scrollVal: 1,
+            ease: 'none',
+            scrollTrigger: {
+              id: 'arrow-scroll',
+              trigger: timelineRef.current,
+              start: 'top 50%',
+              end: 'bottom 50%',
+              scrub: 1.2,
+              onUpdate: (self) => {
+                if (!pathElem || !markerRef.current) return;
+                const mappedP = mapScrollToPath(self.progress);
+                const pt = pathElem.getPointAtLength(Math.max(0, Math.min(1, mappedP)) * pathLength);
+                markerRef.current.style.left = `${pt.x}px`;
+                markerRef.current.style.top = `${pt.y}px`;
+              },
             },
-          },
-        });
+          });
+        }, 50);
       });
     };
 
@@ -331,9 +403,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                     </div>
 
                     <p className="text-slate-300 font-semibold leading-relaxed md:text-right">
-                      Frontend-focused developer with practical experience in React,
-                      JavaScript/TypeScript, Next.js, WordPress, responsive UI
-                      development, Shopify, animations, and SEO.
+                      Full Stack developer with practical mastery across Java, Spring Boot, React,
+                      TypeScript, Next.js, PostgreSQL, REST APIs, responsive UI engineering,
+                      and cloud database integrations.
                     </p>
 
                     <p className="text-slate-400 text-sm font-medium leading-relaxed md:text-right">
@@ -343,7 +415,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   </div>
 
                   <div className="flex flex-wrap gap-2 pt-6 mt-4 border-t border-white/10 md:justify-end">
-                    {['React Developer', 'Next.js', 'Shopify & Liquid', 'UI/UX Design'].map(
+                    {['Java Full Stack', 'Spring Boot', 'React & Next.js', 'PostgreSQL & REST'].map(
                       (tag) => (
                         <span
                           key={tag}

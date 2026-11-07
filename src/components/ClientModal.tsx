@@ -27,95 +27,84 @@ export const ClientModal: React.FC<ClientModalProps> = ({ client, onClose }) => 
   if (!client) return null;
 
   const renderIcon = () => {
-    if (client.icon === 'truck') return <Truck className="w-8 h-8 text-slate-900" />;
-    if (client.icon === 'zap') return <Zap className="w-8 h-8 text-slate-900" />;
-    return <Cake className="w-8 h-8 text-slate-900" />;
+    if (client.icon === 'truck') return <Truck className="w-8 h-8 text-black" />;
+    if (client.icon === 'zap') return <Zap className="w-8 h-8 text-black" />;
+    return <Cake className="w-8 h-8 text-black" />;
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-pink-100/80 backdrop-blur-sm animate-in fade-in duration-200">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       <div
-        className="relative w-full max-w-xl bg-white border-4 border-slate-900 rounded-none shadow-[16px_16px_0px_0px_rgba(168,85,247,1)] p-6 sm:p-10 max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-xl bg-[#0e0e12] border-2 border-[#a855f7] shadow-[12px_12px_0px_0px_#a855f7] p-6 sm:p-8 max-h-[90vh] overflow-y-auto text-white"
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-6 right-6 p-2 bg-slate-100 border-2 border-slate-900 text-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:translate-y-1 hover:shadow-none transition-all cursor-pointer"
-          aria-label="Close Modal"
-        >
-          <X className="w-6 h-6" />
-        </button>
+        {/* Retro Window Header */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 bg-[#ff007f] inline-block" />
+            <span className="w-3 h-3 bg-[#00e5ff] inline-block" />
+            <span className="w-3 h-3 bg-[#a855f7] inline-block" />
+            <span className="font-['VT323',monospace] text-lg text-slate-300 ml-2 tracking-widest">
+              CLIENT_DOSSIER // {client.title}.dat
+            </span>
+          </div>
 
-        <div className="flex items-center gap-6 mb-6">
+          <button
+            onClick={onClose}
+            className="p-1.5 bg-[#a855f7] hover:bg-purple-400 text-black border border-black shadow-[2px_2px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer"
+            aria-label="Close Modal"
+          >
+            <X className="w-5 h-5 font-bold" />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-5 mb-6">
           <div
-            className="w-16 h-16 border-4 border-slate-900 flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] rotate-3"
-            style={{ backgroundColor: client.bgColor || '#fcd34d' }}
+            className="w-16 h-16 border-2 border-white/30 flex items-center justify-center shadow-[4px_4px_0px_#000] rotate-3"
+            style={{ backgroundColor: client.bgColor || '#ff007f' }}
           >
             {renderIcon()}
           </div>
           <div>
-            <div className="text-xs font-black uppercase tracking-widest text-purple-600 mb-1">
+            <div className="text-xs font-black uppercase tracking-widest text-[#a855f7] mb-1 font-mono">
               {client.type}
             </div>
-            <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tighter">
+            <h3 className="text-2xl sm:text-3xl font-['Chakra_Petch',sans-serif] font-black text-white uppercase tracking-tight">
               {client.title}
             </h3>
           </div>
         </div>
 
-        <p className="text-sm font-bold text-slate-700 leading-relaxed bg-slate-50 p-4 border-2 border-slate-200">
+        <p className="text-sm font-semibold text-slate-300 leading-relaxed bg-white/5 p-4 border border-white/10 mb-6">
           {client.subtitle}
         </p>
 
-        <div className="mt-8 space-y-6 pt-6 border-t-4 border-slate-900">
-          <h4 className="text-xs font-black uppercase tracking-widest text-pink-500">
-            Scope & Deliverables
-          </h4>
-          <p className="text-sm font-bold text-slate-800 leading-relaxed">
-            {client.details}
-          </p>
+        <div className="space-y-6 pt-4 border-t border-white/10">
+          <div>
+            <h4 className="text-xs font-black uppercase tracking-widest text-[#ff007f] mb-2 font-['Chakra_Petch',sans-serif]">
+              // Scope &amp; Deliverables
+            </h4>
+            <p className="text-sm font-semibold text-slate-300 leading-relaxed">
+              {client.details}
+            </p>
+          </div>
 
-          <ul className="space-y-3 text-sm font-bold text-slate-800 pt-2">
-            <li className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0 mt-0.5" />
-              <span>
-                Responsive UI development customized for client target demographics.
-              </span>
-            </li>
-            <li className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0 mt-0.5" />
-              <span>
-                High-performance asset loading, fast TTFB, and SEO optimization.
-              </span>
-            </li>
-            <li className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0 mt-0.5" />
-              <span>
-                Direct client collaboration, review iterations, and handover documentation.
-              </span>
-            </li>
-          </ul>
-        </div>
-
-        <div className="mt-10 pt-6 border-t-4 border-slate-900 flex items-center justify-between gap-4">
-          {client.liveUrl ? (
-            <a
-              href={client.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-4 bg-emerald-400 hover:bg-emerald-300 border-4 border-slate-900 text-slate-900 font-black uppercase tracking-widest text-xs transition-all shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:translate-y-1 hover:shadow-none"
-            >
-              <span>Visit Live Website</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
-          ) : <div />}
-
-          <button
-            onClick={onClose}
-            className="px-6 py-4 bg-purple-400 border-4 border-slate-900 text-slate-900 font-black uppercase tracking-widest text-xs transition-all shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:translate-y-1 hover:shadow-none"
-          >
-            Close Window
-          </button>
+          {client.liveUrl && (
+            <div className="pt-4 border-t border-white/10">
+              <a
+                href={client.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#ff007f] hover:bg-pink-400 border-2 border-black text-white font-['Chakra_Petch',sans-serif] font-black uppercase tracking-widest text-xs transition-all shadow-[4px_4px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5"
+              >
+                <span>Launch Client Platform</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>

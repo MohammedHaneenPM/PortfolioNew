@@ -65,27 +65,42 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* 5. Giant Radial Halftone Accent (Top-Right) */}
       <div className="absolute -top-12 -right-12 w-[520px] h-[520px] rounded-full pointer-events-none opacity-20 y2k-halftone-pattern" />
 
-      {/* 5. Top-Right Cyber Wireframe 3D Orbit Globe */}
-      <div className="absolute top-20 right-8 sm:right-24 z-10 pointer-events-none hidden sm:block opacity-60">
-        <svg
-          className="w-28 h-28 text-white/90 animate-[spin_40s_linear_infinite]"
-          viewBox="0 0 100 100"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.2"
-        >
-          <ellipse cx="50" cy="50" rx="42" ry="42" strokeDasharray="3 3" />
-          <ellipse cx="50" cy="50" rx="42" ry="18" />
-          <ellipse cx="50" cy="50" rx="42" ry="7" />
-          <ellipse cx="50" cy="50" rx="18" ry="42" />
-          <ellipse cx="50" cy="50" rx="7" ry="42" />
-          {/* Starburst cyber sparkle badge */}
-          <path
-            d="M86 16 L88 23 L95 25 L88 27 L86 34 L84 27 L77 25 L84 23 Z"
-            fill="#ff007f"
-            stroke="none"
-          />
-        </svg>
+      {/* 5. 3D Gyroscopic Orbital Planet & Spinning MHPM. Logo in Background */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] sm:w-[540px] lg:w-[680px] h-[340px] sm:h-[540px] lg:h-[680px] pointer-events-none z-0 opacity-25 sm:opacity-35 [perspective:1000px]">
+        <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]">
+          {/* Outer Dashed Neon Orbit Ring */}
+          <div className="absolute inset-0 rounded-full border-2 border-dashed border-[#ff007f] opacity-80 animate-orbit-ring" />
+
+          {/* Secondary Reverse Orbit Ring with Cyan Accent */}
+          <div className="absolute inset-8 sm:inset-12 rounded-full border border-[#00e5ff] opacity-60 animate-orbit-ring-reverse" />
+
+          {/* Third Tilted Thin Ring with Micro Satellite Node */}
+          <div className="absolute inset-16 sm:inset-24 rounded-full border border-white/20 animate-orbit-ring" style={{ animationDuration: '32s' }}>
+            <span className="absolute -top-1.5 left-1/2 w-3 h-3 bg-[#ff007f] rounded-full shadow-[0_0_12px_#ff007f]" />
+          </div>
+
+          {/* Central Floating 3D MHPM. Wordmark Emblem */}
+          <div className="animate-float-logo flex flex-col items-center justify-center select-none">
+            <div className="px-6 sm:px-10 py-3 sm:py-4 bg-black/90 border-2 border-[#ff007f] shadow-[0_0_40px_rgba(255,0,127,0.4)] rounded-full flex items-center gap-2 sm:gap-3 backdrop-blur-sm">
+              <span className="font-['Syne',sans-serif] font-black italic text-3xl sm:text-5xl lg:text-6xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-[#ff007f]">
+                MHPM<span className="text-[#ff007f]">.</span>
+              </span>
+              <svg
+                className="w-6 h-6 sm:w-10 sm:h-10 text-[#ff007f] animate-pulse shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-25 12 12)" />
+                <circle cx="12" cy="12" r="3" fill="currentColor" />
+              </svg>
+            </div>
+            <span className="font-['VT323',monospace] text-xs sm:text-sm tracking-[0.3em] text-[#00e5ff] mt-2 font-bold uppercase drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">
+              // ORBITAL_CORE.SYS //
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* 6. Realistic Barcode Decal Sticker (Top Left) */}
@@ -180,16 +195,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Roles Subtitle Bar */}
             <div className="flex flex-wrap items-center gap-2 font-mono text-sm sm:text-base text-slate-200 font-extrabold uppercase tracking-wider pt-1">
-              <span className="text-white hover:text-[#ff007f] transition-colors">UI/UX Developer</span>
+              <span className="text-white hover:text-[#ff007f] transition-colors">Java Full Stack Developer</span>
               <span className="text-[#ff007f] font-black">•</span>
-              <span className="text-white hover:text-[#ff007f] transition-colors">Web Developer</span>
+              <span className="text-white hover:text-[#ff007f] transition-colors">UI/UX Engineer</span>
               <span className="text-[#ff007f] font-black">•</span>
-              <span className="text-white hover:text-[#ff007f] transition-colors">Data Analyst</span>
+              <span className="text-white hover:text-[#ff007f] transition-colors">Software Engineer</span>
             </div>
 
             {/* Description Bio */}
             <p className="text-slate-300 text-sm sm:text-base max-w-xl font-medium leading-relaxed">
-              I build modern web experiences, design intuitive interfaces, and turn data into actionable insights.
+              Full Stack developer crafting scalable web architectures, robust Java &amp; Spring backends, high-performance React frontends, and intuitive user experiences.
             </p>
 
             {/* Brutalist Call to Action Buttons */}
@@ -235,15 +250,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* 2. User Profile Photo (Halftone / High Contrast Screenprint) */}
               <div className="relative z-10 w-full h-full flex items-end justify-center overflow-visible">
                 <div className="relative w-full h-[90%] border-4 border-black bg-black shadow-[10px_10px_0px_#000] overflow-hidden">
-                  <img
-                    src="/my-image..png"
-                    alt="Mohammed Haneen P M"
-                    className="w-full h-full object-cover object-top filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-500"
-                    onError={(e) => {
-                      // fallback to profile.png if file name differs
-                      (e.currentTarget as HTMLImageElement).src = '/profile.png';
-                    }}
-                  />
+                  <picture>
+                    <source media="(max-width: 640px)" srcSet="/hero-portrait-sm.webp" type="image/webp" />
+                    <source srcSet="/hero-portrait.webp" type="image/webp" />
+                    <img
+                      src="/hero-portrait.webp"
+                      alt="Mohammed Haneen P M - Java Full Stack Developer"
+                      width={440}
+                      height={480}
+                      fetchPriority="high"
+                      decoding="async"
+                      className="w-full h-full object-cover object-top filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-500"
+                    />
+                  </picture>
                   {/* Subtle photo scanline overlay */}
                   <div
                     className="absolute inset-0 pointer-events-none opacity-20"
@@ -282,16 +301,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       <span className="font-bold">mhpm.exe</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <button className="w-4 h-4 bg-[#c0c0c0] text-black border border-t-white border-l-white border-b-black border-r-black flex items-center justify-center text-[10px]">
+                      <button aria-label="Minimize mhpm.exe" className="w-4 h-4 bg-[#c0c0c0] text-black border border-t-white border-l-white border-b-black border-r-black flex items-center justify-center text-[10px]">
                         <Minus className="w-2.5 h-2.5" />
                       </button>
-                      <button className="w-4 h-4 bg-[#c0c0c0] text-black border border-t-white border-l-white border-b-black border-r-black flex items-center justify-center text-[10px]">
+                      <button aria-label="Maximize mhpm.exe" className="w-4 h-4 bg-[#c0c0c0] text-black border border-t-white border-l-white border-b-black border-r-black flex items-center justify-center text-[10px]">
                         <Square className="w-2.5 h-2.5" />
                       </button>
                       <button
                         onClick={() => setShowExeWindow(false)}
                         className="w-4 h-4 bg-[#c0c0c0] text-black border border-t-white border-l-white border-b-black border-r-black flex items-center justify-center text-[10px] hover:bg-rose-500 hover:text-white"
                         title="Close"
+                        aria-label="Close mhpm.exe window"
                       >
                         <X className="w-2.5 h-2.5" />
                       </button>

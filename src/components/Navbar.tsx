@@ -72,15 +72,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onContactClick }) => {
           {/* Zone 1: Y2K Orbit Planet Logo */}
           <a
             href="#home"
-            className="flex items-center gap-3 group transition-transform hover:scale-105"
+            className="flex items-center gap-2 group transition-transform hover:scale-105"
           >
             <div className="relative flex items-center justify-center">
-              <div className="relative px-3.5 py-1.5 border-2 border-white/90 rounded-[50px] shadow-[3px_3px_0px_#ff007f] bg-black/80 flex items-center gap-1.5 transform -rotate-2">
-                <span className="font-['Syne',sans-serif] font-black italic text-lg sm:text-xl tracking-tighter text-white">
+              <div className="relative px-2.5 sm:px-3.5 py-1 sm:py-1.5 border-2 border-white/90 rounded-[50px] shadow-[2px_2px_0px_#ff007f] sm:shadow-[3px_3px_0px_#ff007f] bg-black/80 flex items-center gap-1 sm:gap-1.5 transform -rotate-2">
+                <span className="font-['Syne',sans-serif] font-black italic text-base sm:text-xl tracking-tighter text-white">
                   MHPM<span className="text-[#ff007f]">.</span>
                 </span>
                 <svg
-                  className="w-5 h-5 text-[#ff007f] animate-pulse"
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-[#ff007f] animate-pulse"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -93,7 +93,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onContactClick }) => {
             </div>
           </a>
 
-          {/* Zone 2: Navigation Links Pill Bar */}
+          {/* Zone 2: Navigation Links Pill Bar (Desktop) */}
           <nav className="hidden md:flex items-center gap-2 bg-[#121215]/80 px-4 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
             {navLinks.map((link) => {
               const isActive = activeSection === link.href.substring(1);
@@ -112,11 +112,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onContactClick }) => {
             })}
           </nav>
 
-          {/* Zone 3: Brutalist Neon Pink "Let's Talk ↗" CTA */}
-          <div className="flex items-center gap-3">
+          {/* Zone 3: Actions (Desktop CTA + Mobile Clean Action) */}
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={onContactClick}
-              className="px-5 py-2 bg-[#ff007f] hover:bg-[#ff1a8c] text-white font-['Syne',sans-serif] font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_#fff] transition-all flex items-center gap-1.5 cursor-pointer"
+              className="hidden sm:flex px-4 sm:px-5 py-2 bg-[#ff007f] hover:bg-[#ff1a8c] text-white font-['Syne',sans-serif] font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_#fff] transition-all items-center gap-1.5 cursor-pointer"
             >
               <span>Let&apos;s Talk</span>
               <span className="text-base leading-none">↗</span>
@@ -125,8 +125,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onContactClick }) => {
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 bg-black border-2 border-white text-white hover:bg-[#ff007f] transition-colors"
-              aria-label="Toggle menu"
+              className="md:hidden p-2 bg-black/90 border-2 border-white text-white hover:bg-[#ff007f] transition-colors shadow-[2px_2px_0px_#ff007f]"
+              aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -146,6 +146,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onContactClick }) => {
                 {link.name}
               </a>
             ))}
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onContactClick();
+              }}
+              className="mt-2 w-full py-2.5 bg-[#ff007f] text-white font-['Syne',sans-serif] font-black text-xs uppercase tracking-widest border border-white shadow-[2px_2px_0px_#fff] flex items-center justify-center gap-1.5"
+            >
+              <span>Let&apos;s Talk</span>
+              <span>↗</span>
+            </button>
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Calendar, Clock, User, Mail, MessageSquare, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
 
 interface BookingFormData {
@@ -25,6 +25,38 @@ export const MeetingBookingSection: React.FC = () => {
     type: 'success' | 'error';
     text: string;
   } | null>(null);
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const [cursorPos, setCursorPos] = useState({ x: -9999, y: -9999 });
+  const [isInsideSection, setIsInsideSection] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    let animationFrameId: number;
+    const handleMouseMove = (e: MouseEvent) => {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        const rect = section.getBoundingClientRect();
+        setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      });
+    };
+    const handleMouseEnter = () => setIsInsideSection(true);
+    const handleMouseLeave = () => {
+      cancelAnimationFrame(animationFrameId);
+      setIsInsideSection(false);
+      setCursorPos({ x: -9999, y: -9999 });
+    };
+    section.addEventListener('mousemove', handleMouseMove);
+    section.addEventListener('mouseenter', handleMouseEnter);
+    section.addEventListener('mouseleave', handleMouseLeave);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      section.removeEventListener('mousemove', handleMouseMove);
+      section.removeEventListener('mouseenter', handleMouseEnter);
+      section.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
 
   const todayStr = new Date().toISOString().split('T')[0];
 
@@ -94,7 +126,11 @@ export const MeetingBookingSection: React.FC = () => {
   };
 
   return (
-    <section id="booking" className="py-24 md:py-32 relative bg-[#0a0a0c] text-white border-b-4 border-black overflow-hidden font-mono">
+    <section 
+      ref={sectionRef}
+      id="booking" 
+      className="py-24 md:py-32 relative bg-[#0a0a0c] text-white border-b-4 border-black overflow-hidden font-mono"
+    >
       {/* Background Matrix & Y2K Noise */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-15"
@@ -107,6 +143,33 @@ export const MeetingBookingSection: React.FC = () => {
         }}
       />
       <div className="absolute inset-0 pointer-events-none opacity-20 y2k-noise-overlay" />
+
+      {/* Neon cursor-reveal spotlight */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+        style={{
+          opacity: isInsideSection ? 1 : 0,
+          background: `radial-gradient(600px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255,0,127,0.14) 0%, rgba(0,229,255,0.07) 35%, transparent 70%)`,
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-200"
+        style={{
+          opacity: isInsideSection ? 1 : 0,
+          background: `radial-gradient(160px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255,0,127,0.22) 0%, transparent 100%)`,
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          opacity: isInsideSection ? 1 : 0,
+          backgroundImage: `linear-gradient(to right, rgba(255,0,127,0.45) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,0,127,0.45) 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
+          WebkitMaskImage: `radial-gradient(380px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, transparent 100%)`,
+          maskImage: `radial-gradient(380px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, transparent 100%)`,
+          transition: 'opacity 0.2s',
+        }}
+      />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -167,11 +230,13 @@ export const MeetingBookingSection: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Full Name */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <label htmlFor="booking-fullName" className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                     <User className="w-4 h-4 text-[#ff007f]" />
                     <span>YOUR FULL NAME *</span>
                   </label>
                   <input
+                    id="booking-fullName"
+                    name="fullName"
                     type="text"
                     required
                     value={formData.fullName}
@@ -183,11 +248,13 @@ export const MeetingBookingSection: React.FC = () => {
 
                 {/* Email Address */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <label htmlFor="booking-email" className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                     <Mail className="w-4 h-4 text-[#00e5ff]" />
                     <span>EMAIL ADDRESS *</span>
                   </label>
                   <input
+                    id="booking-email"
+                    name="email"
                     type="email"
                     required
                     value={formData.email}
@@ -201,11 +268,13 @@ export const MeetingBookingSection: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Date */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <label htmlFor="booking-date" className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                     <Calendar className="w-4 h-4 text-yellow-400" />
                     <span>DATE (YYYY-MM-DD) *</span>
                   </label>
                   <input
+                    id="booking-date"
+                    name="preferredDate"
                     type="date"
                     required
                     min={todayStr}
@@ -217,11 +286,13 @@ export const MeetingBookingSection: React.FC = () => {
 
                 {/* Time */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <label htmlFor="booking-time" className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                     <Clock className="w-4 h-4 text-purple-400" />
                     <span>TIME SLOT *</span>
                   </label>
                   <select
+                    id="booking-time"
+                    name="preferredTime"
                     required
                     value={formData.preferredTime}
                     onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
@@ -240,11 +311,13 @@ export const MeetingBookingSection: React.FC = () => {
 
               {/* Agenda */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                <label htmlFor="booking-agenda" className="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                   <MessageSquare className="w-4 h-4 text-emerald-400" />
                   <span>AGENDA // DISCUSSION TOPICS *</span>
                 </label>
                 <textarea
+                  id="booking-agenda"
+                  name="agenda"
                   rows={4}
                   required
                   value={formData.agenda}
